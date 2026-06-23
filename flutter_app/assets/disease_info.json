@@ -1,0 +1,90 @@
+{
+  "Acne": {
+    "symptoms": "Pimples, Blackheads, Whiteheads, Oily skin, Redness, Scarring",
+    "precautions": "Wash face twice daily, Avoid touching face, Use non-comedogenic products, Stay hydrated, Avoid greasy foods"
+  },
+  "Actinic Keratosis": {
+    "symptoms": "Rough scaly patches, Pink or red spots, Itching, Burning sensation, Wart-like surface, Crusting",
+    "precautions": "Use sunscreen daily, Avoid prolonged sun exposure, Wear protective clothing, See a dermatologist, Avoid tanning beds"
+  },
+  "Benign Tumors": {
+    "symptoms": "Painless lumps or bumps, Slow growth, Well-defined borders, Non-spreading, Variable size",
+    "precautions": "Monitor for size changes, Avoid self-removal, Consult a doctor, Take comparison photos, Annual skin checks"
+  },
+  "Bullous": {
+    "symptoms": "Fluid-filled blisters, Skin peeling, Itching and burning, Redness, Crusting after rupture",
+    "precautions": "Keep skin clean and dry, Avoid bursting blisters, Seek medical attention, Use gentle cleansers, Avoid irritants"
+  },
+  "Candidiasis": {
+    "symptoms": "Red rash, Intense itching, White patches, Burning sensation, Skin folds affected, Soreness",
+    "precautions": "Keep skin dry, Wear breathable clothing, Avoid tight clothing, Maintain hygiene, Use antifungal treatment"
+  },
+  "Drug Eruption": {
+    "symptoms": "Widespread rash, Hives, Blistering, Skin peeling, Redness, Possible fever",
+    "precautions": "Stop suspected medication, Seek immediate medical help, Inform doctor of all allergies, Avoid self-medication, Stay hydrated"
+  },
+  "Eczema": {
+    "symptoms": "Dry itchy skin, Red inflamed patches, Cracking or weeping skin, Thickened skin, Sleep disturbance, Scaly patches",
+    "precautions": "Moisturize regularly, Avoid harsh soaps, Wear soft fabrics, Identify and avoid triggers, Use prescribed creams"
+  },
+  "Infestations/Bites": {
+    "symptoms": "Intense itching, Red welts, Burrow marks, Severe nighttime itching, Small blisters, Rash in rows",
+    "precautions": "Wash all bedding and clothing in hot water, Treat all household members, Use prescribed treatment, Avoid sharing personal items, Consult a doctor"
+  },
+  "Lichen": {
+    "symptoms": "Purple flat-topped bumps, Shiny scales, White lacy lines, Itching, Mouth sores, Nail changes",
+    "precautions": "Avoid scratching, Use gentle skin care, Manage stress, Avoid certain medications, Consult a dermatologist"
+  },
+  "Lupus": {
+    "symptoms": "Butterfly-shaped facial rash, Photosensitivity, Discoid lesions, Hair loss, Joint pain, Fatigue",
+    "precautions": "Use high SPF sunscreen, Avoid sun exposure, Take prescribed medications, Monitor symptoms closely, Regular medical checkups"
+  },
+  "Moles": {
+    "symptoms": "Dark brown spots, Raised or flat surface, Even color, Defined borders, Usually painless, Stable in size",
+    "precautions": "Monitor for ABCDE changes, Annual skin exam, Avoid excess sun, Use sunscreen, Consult doctor if changes occur"
+  },
+  "Psoriasis": {
+    "symptoms": "Thick red patches, Silvery scales, Dry cracked skin, Itching and burning, Joint stiffness, Nail changes",
+    "precautions": "Moisturize daily, Avoid known triggers, Use prescribed treatments, Manage stress, Avoid alcohol and smoking"
+  },
+  "Rosacea": {
+    "symptoms": "Facial redness, Visible blood vessels, Swollen red bumps, Eye irritation, Skin thickening, Flushing",
+    "precautions": "Use gentle skincare, Wear SPF 30+, Avoid alcohol and spicy food, Use prescribed medication, Avoid extreme temperatures"
+  },
+  "Seborrheic Keratoses": {
+    "symptoms": "Waxy brownish growths, Stuck-on appearance, Rough texture, Painless, Variable size, May itch slightly",
+    "precautions": "Avoid irritating the growth, Monitor for changes, Consult doctor if bleeding occurs, No specific treatment needed, Annual skin check"
+  },
+  "Skin Cancer": {
+    "symptoms": "Unusual moles, Asymmetric borders, Color changes, Non-healing sores, Bleeding, Rapid size growth",
+    "precautions": "See a dermatologist immediately, Avoid sun exposure, Use SPF 50+, Avoid tanning beds, Early treatment is critical"
+  },
+  "Sun/Sunlight Damage": {
+    "symptoms": "Age spots, Freckles, Wrinkles, Rough texture, Uneven skin tone, Redness, Dryness",
+    "precautions": "Apply SPF 30+ daily, Wear protective clothing, Seek shade midday, Avoid peak sun hours, Use antioxidant serums"
+  },
+  "Tinea": {
+    "symptoms": "Ring-shaped rash, Scaly patches, Itching and burning, Blisters, Hair loss on scalp, Nail discoloration",
+    "precautions": "Keep skin dry, Avoid sharing personal items, Use antifungal medication, Wear breathable fabrics, Wash hands frequently"
+  },
+  "Unknown/Normal": {
+    "symptoms": "No significant abnormalities detected, Normal skin appearance, Minor pigmentation variations",
+    "precautions": "Maintain regular skincare routine, Use sunscreen daily, Stay hydrated, Schedule annual skin checkup, Monitor for any future changes"
+  },
+  "Vascular Tumors": {
+    "symptoms": "Red or purple birthmarks, Visible blood vessels, Raised skin lesions, Soft and compressible, May bleed easily",
+    "precautions": "Avoid trauma to the area, Consult a dermatologist, Monitor for growth changes, Use protective padding if needed, Annual monitoring"
+  },
+  "Vasculitis": {
+    "symptoms": "Purple or red spots, Skin ulcers, Bruising, Swelling, Joint pain, Numbness or tingling",
+    "precautions": "Seek immediate medical attention, Take prescribed immunosuppressants, Avoid infections, Monitor organ function, Rest affected areas"
+  },
+  "Vitiligo": {
+    "symptoms": "White patches on skin, Loss of skin pigment, Premature hair whitening, Affected mucous membranes, Sun sensitivity in white patches",
+    "precautions": "Use high SPF sunscreen on white patches, Use camouflage makeup if desired, Consult a dermatologist, Monitor thyroid function, Avoid skin trauma"
+  },
+  "Warts": {
+    "symptoms": "Rough raised bumps, Black dots visible inside, Skin-colored or grayish, May cluster together, Mildly painful when pressed",
+    "precautions": "Avoid touching and spreading, Do not pick or cut warts, Keep clean and dry, Use over-the-counter treatments, Consult a doctor for persistent warts"
+  }
+}
