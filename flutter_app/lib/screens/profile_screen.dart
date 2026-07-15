@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../app_theme.dart';
 import '../services/auth_service.dart';
 import '../services/api_service.dart';
 import '../services/language_service.dart';
+import '../widgets/app_header_bar.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -46,7 +48,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Language set to ${_languages[code]}'),
-        backgroundColor: const Color(0xFF0B6E6E),
+        backgroundColor: AppTheme.primary,
         behavior: SnackBarBehavior.floating,
         duration: const Duration(seconds: 2),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -91,18 +93,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F9FB),
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: BackButton(color: const Color(0xFF1A1A2E)),
-        title: const Text('Profile',
-            style: TextStyle(
-                color: Color(0xFF1A1A2E),
-                fontWeight: FontWeight.w600,
-                fontSize: 18)),
-        centerTitle: true,
-      ),
+      backgroundColor: AppTheme.bg,
+      appBar: const BrandedAppBar(title: 'Profile'),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -111,9 +103,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Container(
               width: 90,
               height: 90,
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                    colors: [Color(0xFF0B6E6E), Color(0xFF1A9E9E)]),
+              decoration: const BoxDecoration(
+                gradient: AppTheme.gradient,
                 shape: BoxShape.circle,
               ),
               child: Center(
@@ -205,7 +196,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
         child: Row(
           children: [
-            Icon(icon, color: const Color(0xFF0B6E6E), size: 22),
+            Icon(icon, color: AppTheme.primary, size: 22),
             const SizedBox(width: 14),
             Expanded(
               child: Text(title,
@@ -240,7 +231,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 decoration: BoxDecoration(
                   color:
-                      active ? const Color(0xFF0B6E6E) : Colors.transparent,
+                      active ? AppTheme.primary : Colors.transparent,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(e.value,

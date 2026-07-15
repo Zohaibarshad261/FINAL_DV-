@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'app_theme.dart';
 import 'config.dart';
 import 'screens/splash_screen.dart';
 import 'screens/login_screen.dart';
@@ -39,10 +40,10 @@ class DermaVisionApp extends StatelessWidget {
   }
 
   ThemeData _buildTheme() {
-    const primary = Color(0xFF0B6E6E);
-    const accent = Color(0xFFA8EDDC);
-    const bg = Color(0xFFF7F9FB);
-    const textPrimary = Color(0xFF1A1A2E);
+    const primary = AppTheme.primary;
+    const accent = AppTheme.accent;
+    const bg = AppTheme.bg;
+    const textPrimary = AppTheme.textPrimary;
 
     return ThemeData(
       useMaterial3: true,
@@ -79,7 +80,7 @@ class DermaVisionApp extends StatelessWidget {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: const Color(0xFFF0F4F8),
+        fillColor: AppTheme.accentSoft,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide.none,
@@ -107,7 +108,11 @@ class DermaVisionApp extends StatelessWidget {
       case '/':
         return _slide(const SplashScreen());
       case '/login':
-        return _slide(const LoginScreen());
+        final args = settings.arguments as Map<String, dynamic>?;
+        return _slide(LoginScreen(
+          initialEmail: args?['email'] as String?,
+          successMessage: args?['message'] as String?,
+        ));
       case '/register':
         return _slide(const RegisterScreen());
       case '/home':

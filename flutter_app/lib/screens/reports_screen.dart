@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../app_theme.dart';
 import '../services/auth_service.dart';
+import '../widgets/app_header_bar.dart';
 import '../models/report.dart';
 
 class ReportsScreen extends StatefulWidget {
@@ -48,34 +50,26 @@ class _ReportsScreenState extends State<ReportsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F9FB),
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: BackButton(color: const Color(0xFF1A1A2E)),
-        title: const Text('My Reports',
-            style: TextStyle(
-                color: Color(0xFF1A1A2E),
-                fontWeight: FontWeight.w600,
-                fontSize: 18)),
-        centerTitle: true,
+      backgroundColor: AppTheme.bg,
+      appBar: BrandedAppBar(
+        title: 'My Reports',
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh, color: Color(0xFF0B6E6E)),
+            icon: const Icon(Icons.refresh_rounded, color: AppTheme.primary),
             onPressed: _load,
-          )
+          ),
         ],
       ),
       body: _loading
           ? const Center(
-              child: CircularProgressIndicator(color: Color(0xFF0B6E6E)))
+              child: CircularProgressIndicator(color: AppTheme.primary))
           : _error != null
               ? _errorState()
               : _reports.isEmpty
                   ? _emptyState()
                   : RefreshIndicator(
                       onRefresh: _load,
-                      color: const Color(0xFF0B6E6E),
+                      color: AppTheme.primary,
                       child: ListView.builder(
                         padding: const EdgeInsets.all(16),
                         itemCount: _reports.length,

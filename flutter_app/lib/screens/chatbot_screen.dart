@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
 import '../services/language_service.dart';
+import '../widgets/app_header_bar.dart';
 
 class _Message {
   final String text;
@@ -85,25 +86,9 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF7F9FB),
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: BackButton(color: const Color(0xFF1A1A2E)),
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('AI Dermatology Assistant',
-                style: TextStyle(
-                    color: Color(0xFF1A1A2E),
-                    fontWeight: FontWeight.w600,
-                    fontSize: 15)),
-            Text(widget.disease,
-                style: const TextStyle(
-                    color: Color(0xFF0B6E6E),
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500)),
-          ],
-        ),
+      appBar: BrandedAppBar(
+        title: 'AI Dermatology Assistant',
+        subtitle: widget.disease,
       ),
       body: Column(
         children: [

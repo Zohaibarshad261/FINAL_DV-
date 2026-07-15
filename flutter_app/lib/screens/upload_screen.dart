@@ -2,8 +2,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../app_theme.dart';
 import '../services/inference_service.dart';
 import '../services/auth_service.dart';
+import '../widgets/app_header_bar.dart';
 
 class UploadScreen extends StatefulWidget {
   const UploadScreen({super.key});
@@ -118,18 +120,8 @@ class _UploadScreenState extends State<UploadScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F9FB),
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: BackButton(color: const Color(0xFF1A1A2E)),
-        title: const Text('Scan Skin',
-            style: TextStyle(
-                color: Color(0xFF1A1A2E),
-                fontWeight: FontWeight.w600,
-                fontSize: 18)),
-        centerTitle: true,
-      ),
+      backgroundColor: AppTheme.bg,
+      appBar: const BrandedAppBar(title: 'Scan Skin'),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -144,7 +136,7 @@ class _UploadScreenState extends State<UploadScreen>
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(24),
                   border: Border.all(
-                    color: const Color(0xFF0B6E6E).withOpacity(0.35),
+                    color: AppTheme.primary.withValues(alpha: 0.35),
                     width: 2,
                     strokeAlign: BorderSide.strokeAlignInside,
                   ),
@@ -164,13 +156,13 @@ class _UploadScreenState extends State<UploadScreen>
                             width: 72,
                             height: 72,
                             decoration: BoxDecoration(
-                              color: const Color(0xFFA8EDDC),
+                              color: AppTheme.accentSoft,
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: const Icon(
                                 Icons.add_photo_alternate_outlined,
                                 size: 38,
-                                color: Color(0xFF0B6E6E)),
+                                color: AppTheme.primary),
                           ),
                           const SizedBox(height: 16),
                           const Text('Tap to upload image',
@@ -248,9 +240,7 @@ class _UploadScreenState extends State<UploadScreen>
                           height: 54,
                           width: double.infinity,
                           decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [Color(0xFF0B6E6E), Color(0xFF1A9E9E)],
-                            ),
+                            gradient: AppTheme.gradient,
                             borderRadius: BorderRadius.circular(30),
                           ),
                           child: Center(
@@ -278,9 +268,7 @@ class _UploadScreenState extends State<UploadScreen>
                   )
                 : Container(
                     decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFF0B6E6E), Color(0xFF1A9E9E)],
-                      ),
+                      gradient: AppTheme.gradient,
                       borderRadius: BorderRadius.circular(30),
                     ),
                     child: ElevatedButton(
@@ -325,7 +313,7 @@ class _UploadScreenState extends State<UploadScreen>
           ),
           child: Column(
             children: [
-              Icon(icon, color: const Color(0xFF0B6E6E), size: 28),
+              Icon(icon, color: AppTheme.primary, size: 28),
               const SizedBox(height: 6),
               Text(label,
                   style: const TextStyle(
@@ -371,10 +359,10 @@ class _UploadScreenState extends State<UploadScreen>
               width: 64,
               height: 64,
               decoration: BoxDecoration(
-                color: const Color(0xFFA8EDDC),
+                color: AppTheme.accentSoft,
                 borderRadius: BorderRadius.circular(18),
               ),
-              child: Icon(icon, color: const Color(0xFF0B6E6E), size: 32),
+              child: Icon(icon, color: AppTheme.primary, size: 32),
             ),
             const SizedBox(height: 8),
             Text(label,

@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../app_theme.dart';
 import '../services/auth_service.dart';
+import '../widgets/app_logo.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  final String? initialEmail;
+  final String? successMessage;
+
+  const LoginScreen({super.key, this.initialEmail, this.successMessage});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -11,12 +16,18 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _emailCtrl = TextEditingController();
+  late final TextEditingController _emailCtrl;
   final _passCtrl = TextEditingController();
   final _auth = AuthService();
   bool _loading = false;
   bool _obscure = true;
   String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _emailCtrl = TextEditingController(text: widget.initialEmail ?? '');
+  }
 
   @override
   void dispose() {
@@ -47,36 +58,81 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F9FB),
+      backgroundColor: AppTheme.bg,
       body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Column(
-              children: [
-                // Logo
-                Container(
-                  width: 80,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF0B6E6E),
-                    borderRadius: BorderRadius.circular(22),
-                  ),
-                  child: const Icon(Icons.health_and_safety_rounded,
-                      size: 44, color: Colors.white),
-                ),
-                const SizedBox(height: 16),
-                const Text('DermaVision+',
-                    style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFF1A1A2E))),
-                const SizedBox(height: 6),
-                const Text('Sign in to continue',
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.fromLTRB(20, 12, 20, 0),
+              child: AppLogo(size: 42),
+            ),
+            Expanded(
+              child: Center(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(24),
+                        child: Image.asset(
+                          'assets/app_logo.png',
+                          width: 88,
+                          height: 88,
+                          fit: BoxFit.contain,
+                          errorBuilder: (_, __, ___) => Container(
+                            width: 88,
+                            height: 88,
+                            decoration: BoxDecoration(
+                              gradient: AppTheme.gradient,
+                              borderRadius: BorderRadius.circular(24),
+                              boxShadow: AppTheme.cardShadow,
+                            ),
+                            child: const Icon(Icons.health_and_safety_rounded,
+                                size: 44, color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      const Text('Welcome Back',
+                          style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xFF1A1A2E))),
+                      const SizedBox(height: 6),
+                      const Text('Sign in to continue',
                     style: TextStyle(
                         fontSize: 13,
                         color: Color(0xFF6B7280))),
                 const SizedBox(height: 36),
+
+                if (widget.successMessage != null) ...[
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(12),
+                    margin: const EdgeInsets.only(bottom: 16),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFE8F5E9),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.check_circle_outline,
+                            color: Color(0xFF2E7D32), size: 18),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            widget.successMessage!,
+                            style: const TextStyle(
+                              color: Color(0xFF2E7D32),
+                              fontSize: 13,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
 
                 // Card
                 Container(
@@ -163,7 +219,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         _loading
                             ? const Center(
                                 child: CircularProgressIndicator(
-                                    color: Color(0xFF0B6E6E)))
+                                    color: AppTheme.primary))
                             : ElevatedButton(
                                 onPressed: _login,
                                 child: const Text('Sign In'),
@@ -182,14 +238,17 @@ class _LoginScreenState extends State<LoginScreen> {
                       onTap: () => Navigator.pushNamed(context, '/register'),
                       child: const Text('Sign Up',
                           style: TextStyle(
-                              color: Color(0xFF0B6E6E),
+                              color: AppTheme.primary,
                               fontWeight: FontWeight.w600)),
                     ),
                   ],
                 ),
-              ],
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );

@@ -5,6 +5,8 @@ import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../services/api_service.dart';
 import '../models/doctor.dart';
+import '../app_theme.dart';
+import '../widgets/app_header_bar.dart';
 
 class DoctorsScreen extends StatefulWidget {
   final String disease;
@@ -137,21 +139,13 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF7F9FB),
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: BackButton(color: const Color(0xFF1A1A2E)),
-        title: const Text('Nearby Doctors',
-            style: TextStyle(
-                color: Color(0xFF1A1A2E),
-                fontWeight: FontWeight.w600,
-                fontSize: 18)),
-        centerTitle: true,
+      appBar: BrandedAppBar(
+        title: 'Nearby Doctors',
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh, color: Color(0xFF0B6E6E)),
+            icon: const Icon(Icons.refresh_rounded, color: AppTheme.primary),
             onPressed: _fetchDoctors,
-          )
+          ),
         ],
       ),
       body: _loading
@@ -215,7 +209,7 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
                                 color: Color(0xFF1A1A2E)),
                           ),
                           const Spacer(),
-                          const Text('OpenStreetMap',
+                          const Text('Pakistan Doctors Directory',
                               style: TextStyle(
                                   fontSize: 10, color: Color(0xFF6B7280))),
                         ],
@@ -251,63 +245,143 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
             )
           ],
         ),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              width: 52,
-              height: 52,
-              decoration: BoxDecoration(
-                color: const Color(0xFFA8EDDC),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: const Icon(Icons.local_hospital_outlined,
-                  color: Color(0xFF0B6E6E), size: 28),
-            ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(doc.name,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14,
-                          color: Color(0xFF1A1A2E))),
-                  const SizedBox(height: 3),
-                  Text(doc.address,
-                      style: const TextStyle(
-                          fontSize: 12, color: Color(0xFF6B7280)),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis),
-                  const SizedBox(height: 5),
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFE8F8F0),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(doc.distance,
-                        style: const TextStyle(
-                            fontSize: 11,
-                            color: Color(0xFF2DC653),
-                            fontWeight: FontWeight.w600)),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 52,
+                  height: 52,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFA8EDDC),
+                    borderRadius: BorderRadius.circular(16),
                   ),
-                ],
-              ),
-            ),
-            GestureDetector(
-              onTap: () => _openMaps(doc.mapsUrl),
-              child: Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF0B6E6E),
-                  borderRadius: BorderRadius.circular(12),
+                  child: const Icon(Icons.local_hospital_outlined,
+                      color: Color(0xFF0B6E6E), size: 28),
                 ),
-                child: const Icon(Icons.directions_outlined,
-                    color: Colors.white, size: 20),
-              ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(doc.name,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                              color: Color(0xFF1A1A2E))),
+                      if (doc.qualification.isNotEmpty) ...[
+                        const SizedBox(height: 2),
+                        Text(doc.qualification,
+                            style: const TextStyle(
+                                fontSize: 11.5, color: Color(0xFF6B7280)),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis),
+                      ],
+                      const SizedBox(height: 3),
+                      Text(doc.address,
+                          style: const TextStyle(
+                              fontSize: 12, color: Color(0xFF6B7280)),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis),
+                    ],
+                  ),
+                ),
+              ],
             ),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                _statChip(
+                  icon: Icons.near_me_rounded,
+                  text: doc.distance,
+                  color: const Color(0xFF2DC653),
+                  bg: const Color(0xFFE8F8F0),
+                ),
+                if (doc.rating > 0)
+                  _statChip(
+                    icon: Icons.star_rounded,
+                    text: doc.rating.toStringAsFixed(1),
+                    color: const Color(0xFFF4A261),
+                    bg: const Color(0xFFFFF3E8),
+                  ),
+                if (doc.experienceYears > 0)
+                  _statChip(
+                    icon: Icons.work_history_outlined,
+                    text: '${doc.experienceYears.toStringAsFixed(0)} yrs exp',
+                    color: AppTheme.primary,
+                    bg: AppTheme.accentSoft,
+                  ),
+                if (doc.feePkr > 0)
+                  _statChip(
+                    icon: Icons.payments_outlined,
+                    text: 'Rs ${doc.feePkr.toStringAsFixed(0)}',
+                    color: const Color(0xFF0B6E6E),
+                    bg: const Color(0xFFE8F8F0),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                if (doc.profileUrl.isNotEmpty)
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: () => _openMaps(doc.profileUrl),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: const Color(0xFF0B6E6E),
+                        side: const BorderSide(color: Color(0xFF0B6E6E)),
+                        minimumSize: const Size(0, 40),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                      ),
+                      icon: const Icon(Icons.person_outline_rounded, size: 16),
+                      label: const Text('View Profile',
+                          style: TextStyle(fontSize: 12.5)),
+                    ),
+                  ),
+                const SizedBox(width: 10),
+                GestureDetector(
+                  onTap: () => _openMaps(doc.mapsUrl),
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF0B6E6E),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(Icons.directions_outlined,
+                        color: Colors.white, size: 20),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+
+  Widget _statChip({
+    required IconData icon,
+    required String text,
+    required Color color,
+    required Color bg,
+  }) =>
+      Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: bg,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 12, color: color),
+            const SizedBox(width: 4),
+            Text(text,
+                style: TextStyle(
+                    fontSize: 11, color: color, fontWeight: FontWeight.w600)),
           ],
         ),
       );
@@ -328,7 +402,7 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
                       color: Color(0xFF1A1A2E))),
               const SizedBox(height: 6),
               const Text(
-                  'OpenStreetMap coverage may be limited here.\nTry searching manually.',
+                  'Could not load the doctors directory.\nCheck your connection and try again.',
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 13, color: Color(0xFF6B7280))),
               const SizedBox(height: 20),

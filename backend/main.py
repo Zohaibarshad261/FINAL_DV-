@@ -4,15 +4,19 @@ Handles: /predict (PyTorch EfficientNet-B0), /chat, /translate, /doctors, /healt
 Run: uvicorn main:app --host 0.0.0.0 --port 8000
 """
 
+import csv
+import hashlib
+import html
 import io
+import json
 import os
 from contextlib import asynccontextmanager
+from pathlib import Path
 from dotenv import load_dotenv
 
 load_dotenv()  # reads backend/.env into os.environ
 from typing import Any, Optional
 
-import requests
 import torch
 import torch.nn.functional as F
 from deep_translator import GoogleTranslator
@@ -31,13 +35,9 @@ from torchvision import transforms
 
 MODEL_PATH = os.getenv("MODEL_PATH", "best_efficientnet.pth")
 TOP_K = 5
-OVERPASS_URLS = [
-    "https://overpass-api.de/api/interpreter",
-    "https://overpass.kumi.systems/api/interpreter",
-    "https://overpass.openstreetmap.ru/api/interpreter",
-]
-RADIUS_M = 10_000  # 10 km
-_HEADERS = {"User-Agent": "DermaVision/2.0 (skin disease detection app)"}
+DATA_DIR = Path(__file__).parent / "data"
+DOCTORS_CSV_PATH = DATA_DIR / "final_cleansed_data.csv"
+CITY_COORDS_PATH = DATA_DIR / "pk_city_coords.json"
 
 CLASS_NAMES = [
     "Acne", "Actinic_Keratosis", "Benign_tumors", "Bullous", "Candidiasis",
@@ -340,7 +340,8 @@ async def translate(body: TranslateRequest) -> dict[str, str]:
 
 
 # ---------------------------------------------------------------------------
-# /doctors  — Nearby doctors via Overpass API
+# /doctors  — Real Pakistani dermatologists
+# (Kaggle: umarzafar/pakistani-doctors-profiles-dataset, city-level geocoded)
 # ---------------------------------------------------------------------------
 
 class DoctorsRequest(BaseModel):
@@ -349,67 +350,85 @@ class DoctorsRequest(BaseModel):
     disease: str = "skin condition"
 
 
-def _overpass_query(lat: float, lng: float) -> str:
-    return (
-        f"[out:json][timeout:25];\n"
-        f"(\n"
-        f'  node["amenity"="doctors"](around:{RADIUS_M},{lat},{lng});\n'
-        f'  node["healthcare"="doctor"](around:{RADIUS_M},{lat},{lng});\n'
-        f'  node["amenity"="clinic"](around:{RADIUS_M},{lat},{lng});\n'
-        f'  node["healthcare"="clinic"](around:{RADIUS_M},{lat},{lng});\n'
-        f");\nout body;\n"
-    )
+def _jitter(seed: str, scale: float = 0.015) -> tuple[float, float]:
+    """Small deterministic per-doctor offset so markers sharing a city don't
+    all stack on the exact same point on the map."""
+    digest = hashlib.md5(seed.encode()).hexdigest()
+    a = int(digest[:8], 16) / 0xFFFFFFFF - 0.5
+    b = int(digest[8:16], 16) / 0xFFFFFFFF - 0.5
+    return a * 2 * scale, b * 2 * scale
+
+
+def _to_float(value: str, default: float = 0.0) -> float:
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
+
+def _clean(value: str) -> str:
+    return html.unescape(value or "").strip()
+
+
+def _load_dermatologists() -> list[dict[str, Any]]:
+    try:
+        with open(CITY_COORDS_PATH, encoding="utf-8") as f:
+            city_coords: dict[str, list[float]] = json.load(f)
+    except (OSError, json.JSONDecodeError):
+        return []
+
+    doctors = []
+    try:
+        with open(DOCTORS_CSV_PATH, encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                specialization = _clean(row.get("Specialization", ""))
+                if "dermatolog" not in specialization.lower():
+                    continue
+                city = row.get("City", "").strip()
+                coord = city_coords.get(city)
+                if coord is None:
+                    continue
+
+                name = _clean(row.get("Doctor Name", ""))
+                jlat, jlng = _jitter(f"{name}|{city}")
+                satisfaction = min(_to_float(row.get("Patient Satisfaction Rate(%age)")), 100.0)
+
+                doctors.append({
+                    "name": name,
+                    "specialization": specialization,
+                    "qualification": _clean(row.get("Doctor Qualification", "")),
+                    "experience_years": _to_float(row.get("Experience(Years)")),
+                    "fee_pkr": _to_float(row.get("Fee(PKR)")),
+                    "rating": round(satisfaction / 20, 1),
+                    "address": _clean(row.get("Hospital Address", "")) or "Address not available",
+                    "profile_url": _clean(row.get("Doctors Link", "")),
+                    "lat": coord[0] + jlat,
+                    "lng": coord[1] + jlng,
+                })
+    except OSError:
+        return []
+
+    return doctors
+
+
+DERMATOLOGISTS = _load_dermatologists()
 
 
 @app.post("/doctors")
 async def find_doctors(body: DoctorsRequest) -> dict[str, Any]:
-    query = _overpass_query(body.lat, body.lng)
-    elements = []
-    last_error = ""
-    for url in OVERPASS_URLS:
-        try:
-            resp = requests.get(
-                url,
-                params={"data": query},
-                headers=_HEADERS,
-                timeout=30,
-            )
-            resp.raise_for_status()
-            elements = resp.json().get("elements", [])
-            break  # success — stop trying
-        except Exception as exc:
-            last_error = str(exc)
-            continue
-    else:
-        raise HTTPException(status_code=500, detail=f"Overpass API unavailable: {last_error}")
+    origin = (body.lat, body.lng)
+    ranked = [
+        {**doc, "distance": round(geodesic(origin, (doc["lat"], doc["lng"])).km, 2)}
+        for doc in DERMATOLOGISTS
+    ]
+    ranked.sort(key=lambda d: d["distance"])
 
-    doctors = []
-    for el in elements:
-        tags = el.get("tags", {})
-        name = tags.get("name") or tags.get("operator")
-        if not name:
-            continue
-        el_lat, el_lng = el.get("lat"), el.get("lon")
-        if el_lat is None or el_lng is None:
-            continue
-        dist_km = geodesic((body.lat, body.lng), (el_lat, el_lng)).km
-        address = ", ".join(
-            filter(None, [
-                f"{tags.get('addr:housenumber', '')} {tags.get('addr:street', '')}".strip(),
-                tags.get("addr:city", ""),
-            ])
-        ) or "Address not available"
-        doctors.append({
-            "name": name,
-            "address": address,
-            "distance": round(dist_km, 2),
-            "maps_url": f"https://www.google.com/maps/search/?api=1&query={el_lat},{el_lng}",
-            "lat": el_lat,
-            "lng": el_lng,
-        })
+    top = ranked[:20]
+    for d in top:
+        d["maps_url"] = f"https://www.google.com/maps/search/?api=1&query={d['lat']},{d['lng']}"
 
-    doctors.sort(key=lambda d: d["distance"])
-    return {"doctors": doctors[:20], "disease": body.disease}
+    return {"doctors": top, "disease": body.disease}
 
 
 # ---------------------------------------------------------------------------

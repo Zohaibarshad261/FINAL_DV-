@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../app_theme.dart';
 import '../services/auth_service.dart';
+import '../widgets/app_logo.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -37,7 +39,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
         password: _passCtrl.text,
         fullName: _nameCtrl.text.trim(),
       );
-      if (mounted) Navigator.pushReplacementNamed(context, '/home');
+      await _auth.signOut();
+      if (!mounted) return;
+      Navigator.pushReplacementNamed(
+        context,
+        '/login',
+        arguments: {
+          'email': _emailCtrl.text.trim(),
+          'message': 'Account created! Please sign in with your email and password.',
+        },
+      );
     } on AuthException catch (e) {
       setState(() => _error = e.message);
     } catch (_) {
@@ -50,25 +61,43 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F9FB),
+      backgroundColor: AppTheme.bg,
       body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Column(
-              children: [
-                Container(
-                  width: 80,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF0B6E6E),
-                    borderRadius: BorderRadius.circular(22),
-                  ),
-                  child: const Icon(Icons.health_and_safety_rounded,
-                      size: 44, color: Colors.white),
-                ),
-                const SizedBox(height: 16),
-                const Text('Create Account',
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.fromLTRB(20, 12, 20, 0),
+              child: AppLogo(size: 42),
+            ),
+            Expanded(
+              child: Center(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(24),
+                        child: Image.asset(
+                          'assets/app_logo.png',
+                          width: 88,
+                          height: 88,
+                          fit: BoxFit.contain,
+                          errorBuilder: (_, __, ___) => Container(
+                            width: 88,
+                            height: 88,
+                            decoration: BoxDecoration(
+                              gradient: AppTheme.gradient,
+                              borderRadius: BorderRadius.circular(24),
+                              boxShadow: AppTheme.cardShadow,
+                            ),
+                            child: const Icon(Icons.health_and_safety_rounded,
+                                size: 44, color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      const Text('Create Account',
                     style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.w700,
@@ -146,7 +175,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         _loading
                             ? const Center(
                                 child: CircularProgressIndicator(
-                                    color: Color(0xFF0B6E6E)))
+                                    color: AppTheme.primary))
                             : ElevatedButton(
                                 onPressed: _register,
                                 child: const Text('Create Account'),
@@ -165,14 +194,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       onTap: () => Navigator.pop(context),
                       child: const Text('Sign In',
                           style: TextStyle(
-                              color: Color(0xFF0B6E6E),
+                              color: AppTheme.primary,
                               fontWeight: FontWeight.w600)),
                     ),
                   ],
                 ),
-              ],
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );

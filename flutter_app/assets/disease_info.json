@@ -1,89 +1,111 @@
 {
   "Acne": {
+    "overview": "A common skin condition where hair follicles become clogged with oil and dead skin cells, leading to pimples, blackheads, and whiteheads. It most often appears on the face, chest, and back and can affect people of any age.",
     "symptoms": "Pimples, Blackheads, Whiteheads, Oily skin, Redness, Scarring",
     "precautions": "Wash face twice daily, Avoid touching face, Use non-comedogenic products, Stay hydrated, Avoid greasy foods"
   },
   "Actinic Keratosis": {
+    "overview": "A rough, scaly patch of skin caused by years of sun exposure. It is considered a precancerous condition and is most common on the face, ears, hands, and scalp.",
     "symptoms": "Rough scaly patches, Pink or red spots, Itching, Burning sensation, Wart-like surface, Crusting",
     "precautions": "Use sunscreen daily, Avoid prolonged sun exposure, Wear protective clothing, See a dermatologist, Avoid tanning beds"
   },
   "Benign Tumors": {
+    "overview": "Non-cancerous growths that develop under or on the skin. They typically grow slowly, have well-defined borders, and do not spread to other parts of the body.",
     "symptoms": "Painless lumps or bumps, Slow growth, Well-defined borders, Non-spreading, Variable size",
     "precautions": "Monitor for size changes, Avoid self-removal, Consult a doctor, Take comparison photos, Annual skin checks"
   },
   "Bullous": {
+    "overview": "A group of skin disorders characterized by fluid-filled blisters that form between layers of skin. Blisters can appear on the skin or mucous membranes and vary widely in size.",
     "symptoms": "Fluid-filled blisters, Skin peeling, Itching and burning, Redness, Crusting after rupture",
     "precautions": "Keep skin clean and dry, Avoid bursting blisters, Seek medical attention, Use gentle cleansers, Avoid irritants"
   },
   "Candidiasis": {
+    "overview": "A fungal infection caused by an overgrowth of Candida yeast, commonly affecting warm, moist areas of skin such as folds, causing redness and itching.",
     "symptoms": "Red rash, Intense itching, White patches, Burning sensation, Skin folds affected, Soreness",
     "precautions": "Keep skin dry, Wear breathable clothing, Avoid tight clothing, Maintain hygiene, Use antifungal treatment"
   },
   "Drug Eruption": {
+    "overview": "An adverse skin reaction triggered by a medication, ranging from mild rashes to severe blistering. Symptoms typically appear soon after starting a new drug.",
     "symptoms": "Widespread rash, Hives, Blistering, Skin peeling, Redness, Possible fever",
     "precautions": "Stop suspected medication, Seek immediate medical help, Inform doctor of all allergies, Avoid self-medication, Stay hydrated"
   },
   "Eczema": {
+    "overview": "A chronic condition that causes the skin to become inflamed, itchy, red, and dry. It often begins in childhood and can flare up periodically throughout life.",
     "symptoms": "Dry itchy skin, Red inflamed patches, Cracking or weeping skin, Thickened skin, Sleep disturbance, Scaly patches",
     "precautions": "Moisturize regularly, Avoid harsh soaps, Wear soft fabrics, Identify and avoid triggers, Use prescribed creams"
   },
   "Infestations/Bites": {
+    "overview": "Skin reactions caused by parasites or insect bites, such as mites, lice, or fleas, resulting in intense itching and localized irritation.",
     "symptoms": "Intense itching, Red welts, Burrow marks, Severe nighttime itching, Small blisters, Rash in rows",
     "precautions": "Wash all bedding and clothing in hot water, Treat all household members, Use prescribed treatment, Avoid sharing personal items, Consult a doctor"
   },
   "Lichen": {
+    "overview": "A group of inflammatory skin conditions, such as lichen planus, that cause itchy, flat-topped purple bumps and can also affect the mouth and nails.",
     "symptoms": "Purple flat-topped bumps, Shiny scales, White lacy lines, Itching, Mouth sores, Nail changes",
     "precautions": "Avoid scratching, Use gentle skin care, Manage stress, Avoid certain medications, Consult a dermatologist"
   },
   "Lupus": {
+    "overview": "An autoimmune disease where the immune system attacks healthy tissue, often producing a distinctive butterfly-shaped rash across the cheeks and nose.",
     "symptoms": "Butterfly-shaped facial rash, Photosensitivity, Discoid lesions, Hair loss, Joint pain, Fatigue",
     "precautions": "Use high SPF sunscreen, Avoid sun exposure, Take prescribed medications, Monitor symptoms closely, Regular medical checkups"
   },
   "Moles": {
+    "overview": "Common, usually harmless growths of pigmented skin cells. Most moles are round, evenly colored, and stable in size, though changes should always be monitored.",
     "symptoms": "Dark brown spots, Raised or flat surface, Even color, Defined borders, Usually painless, Stable in size",
     "precautions": "Monitor for ABCDE changes, Annual skin exam, Avoid excess sun, Use sunscreen, Consult doctor if changes occur"
   },
   "Psoriasis": {
+    "overview": "A chronic autoimmune condition that speeds up skin cell turnover, causing thick, scaly, red patches, often on the elbows, knees, and scalp.",
     "symptoms": "Thick red patches, Silvery scales, Dry cracked skin, Itching and burning, Joint stiffness, Nail changes",
     "precautions": "Moisturize daily, Avoid known triggers, Use prescribed treatments, Manage stress, Avoid alcohol and smoking"
   },
   "Rosacea": {
+    "overview": "A chronic condition causing facial redness, visible blood vessels, and sometimes small red bumps, often triggered by heat, spicy food, or alcohol.",
     "symptoms": "Facial redness, Visible blood vessels, Swollen red bumps, Eye irritation, Skin thickening, Flushing",
     "precautions": "Use gentle skincare, Wear SPF 30+, Avoid alcohol and spicy food, Use prescribed medication, Avoid extreme temperatures"
   },
   "Seborrheic Keratoses": {
+    "overview": "Common, harmless, wart-like growths that appear with age, typically brown or black with a waxy, 'stuck-on' appearance.",
     "symptoms": "Waxy brownish growths, Stuck-on appearance, Rough texture, Painless, Variable size, May itch slightly",
     "precautions": "Avoid irritating the growth, Monitor for changes, Consult doctor if bleeding occurs, No specific treatment needed, Annual skin check"
   },
   "Skin Cancer": {
+    "overview": "Abnormal, uncontrolled growth of skin cells, often caused by UV exposure. Early signs include new or changing moles, sores, or lesions.",
     "symptoms": "Unusual moles, Asymmetric borders, Color changes, Non-healing sores, Bleeding, Rapid size growth",
     "precautions": "See a dermatologist immediately, Avoid sun exposure, Use SPF 50+, Avoid tanning beds, Early treatment is critical"
   },
   "Sun/Sunlight Damage": {
+    "overview": "Skin changes caused by long-term UV exposure, including age spots, wrinkles, rough texture, and uneven pigmentation.",
     "symptoms": "Age spots, Freckles, Wrinkles, Rough texture, Uneven skin tone, Redness, Dryness",
     "precautions": "Apply SPF 30+ daily, Wear protective clothing, Seek shade midday, Avoid peak sun hours, Use antioxidant serums"
   },
   "Tinea": {
+    "overview": "A fungal infection, also known as ringworm, that produces a ring-shaped, scaly, itchy rash on the skin, scalp, or nails.",
     "symptoms": "Ring-shaped rash, Scaly patches, Itching and burning, Blisters, Hair loss on scalp, Nail discoloration",
     "precautions": "Keep skin dry, Avoid sharing personal items, Use antifungal medication, Wear breathable fabrics, Wash hands frequently"
   },
   "Unknown/Normal": {
+    "overview": "No significant skin abnormality was detected. The skin appears within normal limits, though routine self-checks are still recommended.",
     "symptoms": "No significant abnormalities detected, Normal skin appearance, Minor pigmentation variations",
     "precautions": "Maintain regular skincare routine, Use sunscreen daily, Stay hydrated, Schedule annual skin checkup, Monitor for any future changes"
   },
   "Vascular Tumors": {
+    "overview": "Growths formed from an abnormal collection of blood vessels, appearing as red or purple raised marks on the skin.",
     "symptoms": "Red or purple birthmarks, Visible blood vessels, Raised skin lesions, Soft and compressible, May bleed easily",
     "precautions": "Avoid trauma to the area, Consult a dermatologist, Monitor for growth changes, Use protective padding if needed, Annual monitoring"
   },
   "Vasculitis": {
+    "overview": "Inflammation of the blood vessels that can cause purple or red spots, skin ulcers, and bruising, sometimes alongside joint pain.",
     "symptoms": "Purple or red spots, Skin ulcers, Bruising, Swelling, Joint pain, Numbness or tingling",
     "precautions": "Seek immediate medical attention, Take prescribed immunosuppressants, Avoid infections, Monitor organ function, Rest affected areas"
   },
   "Vitiligo": {
+    "overview": "A condition in which the skin loses its pigment-producing cells, resulting in smooth white patches on various parts of the body.",
     "symptoms": "White patches on skin, Loss of skin pigment, Premature hair whitening, Affected mucous membranes, Sun sensitivity in white patches",
     "precautions": "Use high SPF sunscreen on white patches, Use camouflage makeup if desired, Consult a dermatologist, Monitor thyroid function, Avoid skin trauma"
   },
   "Warts": {
+    "overview": "Small, rough skin growths caused by the human papillomavirus (HPV). They are typically harmless and often clear up on their own over time.",
     "symptoms": "Rough raised bumps, Black dots visible inside, Skin-colored or grayish, May cluster together, Mildly painful when pressed",
     "precautions": "Avoid touching and spreading, Do not pick or cut warts, Keep clean and dry, Use over-the-counter treatments, Consult a doctor for persistent warts"
   }

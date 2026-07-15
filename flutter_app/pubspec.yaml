@@ -39,7 +39,21 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
+  flutter_launcher_icons: ^0.14.3
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: assets/app_logo.png
+  adaptive_icon_background: "#1565C0"
+  adaptive_icon_foreground: assets/app_icon_foreground.png
+  remove_alpha_ios: true
 
 flutter:
   uses-material-design: true
-  # No on-device model assets needed — inference runs on the FastAPI backend
+  assets:
+    - assets/app_logo.png
+    - assets/app_icon_foreground.png
+    - assets/disease_info.json
+    - assets/labels.json
+    - assets/images/diseases/

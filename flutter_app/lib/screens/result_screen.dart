@@ -1,7 +1,9 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import '../app_theme.dart';
 import '../services/api_service.dart';
 import '../services/language_service.dart';
+import '../widgets/app_header_bar.dart';
 
 class ResultScreen extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -72,18 +74,8 @@ class _ResultScreenState extends State<ResultScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F9FB),
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: BackButton(color: const Color(0xFF1A1A2E)),
-        title: const Text('Diagnosis Result',
-            style: TextStyle(
-                color: Color(0xFF1A1A2E),
-                fontWeight: FontWeight.w600,
-                fontSize: 18)),
-        centerTitle: true,
-      ),
+      backgroundColor: AppTheme.bg,
+      appBar: const BrandedAppBar(title: 'Diagnosis Result'),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -170,10 +162,12 @@ class _ResultScreenState extends State<ResultScreen>
 
             // Symptoms
             _translating
-                ? const Center(child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 24),
-                    child: CircularProgressIndicator(color: Color(0xFF0B6E6E)),
-                  ))
+                ? const Center(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 24),
+                      child: CircularProgressIndicator(color: AppTheme.primary),
+                    ),
+                  )
                 : _infoCard(
                     title: 'Symptoms',
                     icon: Icons.sick_outlined,
@@ -216,7 +210,7 @@ class _ResultScreenState extends State<ResultScreen>
                     const Row(
                       children: [
                         Icon(Icons.bar_chart_rounded,
-                            color: Color(0xFF0B6E6E), size: 20),
+                            color: AppTheme.primary, size: 20),
                         SizedBox(width: 8),
                         Text('Top Predictions',
                             style: TextStyle(
@@ -243,7 +237,7 @@ class _ResultScreenState extends State<ResultScreen>
                                           ? FontWeight.w700
                                           : FontWeight.w400,
                                       color: isTop
-                                          ? const Color(0xFF0B6E6E)
+                                          ? AppTheme.primary
                                           : const Color(0xFF6B7280))),
                             ),
                             Expanded(
@@ -256,7 +250,7 @@ class _ResultScreenState extends State<ResultScreen>
                                       const Color(0xFFE5E7EB),
                                   valueColor: AlwaysStoppedAnimation(
                                       isTop
-                                          ? const Color(0xFF0B6E6E)
+                                          ? AppTheme.primary
                                           : const Color(0xFF9CA3AF)),
                                 ),
                               ),
@@ -272,7 +266,7 @@ class _ResultScreenState extends State<ResultScreen>
                                           ? FontWeight.w700
                                           : FontWeight.w400,
                                       color: isTop
-                                          ? const Color(0xFF0B6E6E)
+                                          ? AppTheme.primary
                                           : const Color(0xFF6B7280))),
                             ),
                           ],
@@ -318,8 +312,7 @@ class _ResultScreenState extends State<ResultScreen>
             // CTA buttons
             Container(
               decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                    colors: [Color(0xFF0B6E6E), Color(0xFF1A9E9E)]),
+                gradient: AppTheme.gradient,
                 borderRadius: BorderRadius.all(Radius.circular(30)),
               ),
               child: ElevatedButton.icon(
@@ -345,8 +338,8 @@ class _ResultScreenState extends State<ResultScreen>
               onPressed: () => Navigator.pushNamed(context, '/chatbot',
                   arguments: {'disease': disease}),
               style: OutlinedButton.styleFrom(
-                foregroundColor: const Color(0xFF0B6E6E),
-                side: const BorderSide(color: Color(0xFF0B6E6E), width: 2),
+                foregroundColor: AppTheme.primary,
+                side: const BorderSide(color: AppTheme.primary, width: 2),
                 minimumSize: const Size(double.infinity, 54),
                 shape: const StadiumBorder(),
               ),
@@ -386,7 +379,7 @@ class _ResultScreenState extends State<ResultScreen>
           children: [
             Row(
               children: [
-                Icon(icon, color: const Color(0xFF0B6E6E), size: 20),
+                Icon(icon, color: AppTheme.primary, size: 20),
                 const SizedBox(width: 8),
                 Text(title,
                     style: const TextStyle(
