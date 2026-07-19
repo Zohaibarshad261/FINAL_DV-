@@ -434,7 +434,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ? const Color(0xFFFF6B35)
             : const Color(0xFF2DC653);
 
-    return Container(
+    return InkWell(
+      onTap: () => Navigator.pushNamed(context, '/reports'),
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -487,6 +490,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Icon(Icons.chevron_right,
               color: AppTheme.primary.withValues(alpha: 0.6)),
         ],
+      ),
       ),
     );
   }

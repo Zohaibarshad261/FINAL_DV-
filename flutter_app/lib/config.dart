@@ -2,7 +2,7 @@
 /// Change backendBaseUrl to your deployed URL when going to production.
 class AppConfig {
   // Switch between local dev and deployed backend
-  static const String backendBaseUrl = 'http://10.231.230.54:8000'; // Physical device → replace with your PC's WiFi IP
+  static const String backendBaseUrl = 'https://batnat786-dermavision-backend.hf.space'; // Physical device → replace with your PC's WiFi IP
   // static const String backendBaseUrl = 'http://10.0.2.2:8000'; // Android emulator
   // static const String backendBaseUrl = 'http://localhost:8000'; // iOS simulator
   // static const String backendBaseUrl = 'https://your-production-api.com'; // Production
