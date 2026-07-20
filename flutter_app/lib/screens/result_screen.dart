@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import '../app_theme.dart';
+import '../l10n/generated/app_localizations.dart';
 import '../services/api_service.dart';
 import '../services/language_service.dart';
 import '../widgets/app_header_bar.dart';
@@ -73,9 +74,10 @@ class _ResultScreenState extends State<ResultScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: AppTheme.bg,
-      appBar: const BrandedAppBar(title: 'Diagnosis Result'),
+      appBar: BrandedAppBar(title: l10n.diagnosisResultTitle),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -119,8 +121,8 @@ class _ResultScreenState extends State<ResultScreen>
                                     fontWeight: FontWeight.w700,
                                     color: severityColor),
                               ),
-                              const Text('confidence',
-                                  style: TextStyle(
+                              Text(l10n.confidenceLabel,
+                                  style: const TextStyle(
                                       fontSize: 11,
                                       color: Color(0xFF6B7280))),
                             ],
@@ -145,10 +147,10 @@ class _ResultScreenState extends State<ResultScreen>
                     ),
                     child: Text(
                       confidence >= 80
-                          ? 'High Severity'
+                          ? l10n.highSeverity
                           : confidence >= 50
-                              ? 'Medium Severity'
-                              : 'Low Severity',
+                              ? l10n.mediumSeverity
+                              : l10n.lowSeverity,
                       style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
@@ -169,7 +171,7 @@ class _ResultScreenState extends State<ResultScreen>
                     ),
                   )
                 : _infoCard(
-                    title: 'Symptoms',
+                    title: l10n.symptomsLabel,
                     icon: Icons.sick_outlined,
                     chips: _split(_symptoms),
                     chipColor: const Color(0xFFFFEBED),
@@ -180,7 +182,7 @@ class _ResultScreenState extends State<ResultScreen>
             // Precautions
             if (!_translating)
               _infoCard(
-                title: 'Precautions',
+                title: l10n.precautionsLabel,
                 icon: Icons.shield_outlined,
                 chips: _split(_precautions),
                 chipColor: const Color(0xFFE8F8F0),
@@ -207,13 +209,13 @@ class _ResultScreenState extends State<ResultScreen>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Row(
+                    Row(
                       children: [
-                        Icon(Icons.bar_chart_rounded,
+                        const Icon(Icons.bar_chart_rounded,
                             color: AppTheme.primary, size: 20),
-                        SizedBox(width: 8),
-                        Text('Top Predictions',
-                            style: TextStyle(
+                        const SizedBox(width: 8),
+                        Text(l10n.topPredictionsLabel,
+                            style: const TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w600,
                                 color: Color(0xFF1A1A2E))),
@@ -290,8 +292,8 @@ class _ResultScreenState extends State<ResultScreen>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Raw Logits (copy to compare with Python)',
-                        style: TextStyle(
+                    Text(l10n.rawLogitsLabel,
+                        style: const TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w700,
                             color: Color(0xFF00FF99))),
@@ -326,8 +328,8 @@ class _ResultScreenState extends State<ResultScreen>
                 ),
                 icon: const Icon(Icons.location_on_outlined,
                     color: Colors.white),
-                label: const Text('Find Nearby Doctors',
-                    style: TextStyle(
+                label: Text(l10n.findNearbyDoctors,
+                    style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w600,
                         fontSize: 15)),
@@ -344,8 +346,8 @@ class _ResultScreenState extends State<ResultScreen>
                 shape: const StadiumBorder(),
               ),
               icon: const Icon(Icons.chat_bubble_outline),
-              label: const Text('Ask AI Chatbot',
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
+              label: Text(l10n.askAiChatbot,
+                  style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
             ),
           ],
         ),

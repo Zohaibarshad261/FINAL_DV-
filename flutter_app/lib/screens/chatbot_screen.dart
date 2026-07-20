@@ -1,5 +1,9 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../l10n/generated/app_localizations.dart';
 import '../services/api_service.dart';
+import '../services/auth_service.dart';
 import '../services/language_service.dart';
 import '../widgets/app_header_bar.dart';
 
@@ -20,25 +24,73 @@ class ChatbotScreen extends StatefulWidget {
 class _ChatbotScreenState extends State<ChatbotScreen> {
   final _messages = <_Message>[];
   final _controller = TextEditingController();
-  final _scrollCtrl = ScrollController();
   bool _sending = false;
+  bool _greeted = false;
+
+  String get _storageKey =>
+      'chat_history_${AuthService().userId ?? 'guest'}_${widget.disease}';
 
   @override
   void initState() {
     super.initState();
-    // Initial greeting from AI
-    _messages.add(_Message(
-      text:
-          'Hello! I\'m your DermaVision+ assistant. You have been diagnosed with **${widget.disease}**. '
-          'Feel free to ask me any questions about your condition, symptoms, or treatment options.',
-      isUser: false,
-    ));
+    _loadHistory();
+  }
+
+  // Chat history is persisted locally on-device only (SharedPreferences),
+  // keyed per user + disease. The backend is stateless and unaware of this —
+  // each request still just carries the messages the client chooses to send.
+  Future<void> _loadHistory() async {
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getString(_storageKey);
+    if (raw == null || !mounted) return;
+    try {
+      final saved = (jsonDecode(raw) as List)
+          .map((e) => _Message(
+                text: e['text'] as String,
+                isUser: e['isUser'] as bool,
+              ))
+          .toList();
+      if (saved.isNotEmpty) {
+        setState(() {
+          _messages
+            ..clear()
+            ..addAll(saved);
+          _greeted = true;
+        });
+      }
+    } catch (_) {
+      // Corrupt/old cache format — ignore and fall back to a fresh greeting.
+    }
+  }
+
+  Future<void> _saveHistory() async {
+    final prefs = await SharedPreferences.getInstance();
+    final trimmed = _messages.length > 100
+        ? _messages.sublist(_messages.length - 100)
+        : _messages;
+    final encoded = jsonEncode(
+        trimmed.map((m) => {'text': m.text, 'isUser': m.isUser}).toList());
+    await prefs.setString(_storageKey, encoded);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Initial greeting from AI — added here (not initState) since it needs
+    // AppLocalizations, which isn't safely available until dependencies
+    // are resolved.
+    if (!_greeted) {
+      _greeted = true;
+      _messages.add(_Message(
+        text: AppLocalizations.of(context).chatGreeting(widget.disease),
+        isUser: false,
+      ));
+    }
   }
 
   @override
   void dispose() {
     _controller.dispose();
-    _scrollCtrl.dispose();
     super.dispose();
   }
 
@@ -46,66 +98,67 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
     final text = _controller.text.trim();
     if (text.isEmpty || _sending) return;
 
+    // Snapshot prior turns (excluding the opening greeting) so the backend
+    // can include them as context and the bot "remembers" the conversation.
+    final history = _messages
+        .map((m) => {'role': m.isUser ? 'user' : 'assistant', 'content': m.text})
+        .toList();
+
     setState(() {
       _messages.add(_Message(text: text, isUser: true));
       _controller.clear();
       _sending = true;
     });
-    _scrollToBottom();
 
     try {
       final reply = await ApiService.chat(
           message: text,
           diseaseContext: widget.disease,
-          language: LanguageService.language.value);
+          language: LanguageService.language.value,
+          history: history);
       setState(() => _messages.add(_Message(text: reply, isUser: false)));
     } catch (e) {
       setState(() => _messages.add(_Message(
-            text: 'Sorry, I couldn\'t process your request. Please try again.',
+            text: AppLocalizations.of(context).chatErrorMessage,
             isUser: false,
           )));
     } finally {
       if (mounted) setState(() => _sending = false);
-      _scrollToBottom();
+      _saveHistory();
     }
-  }
-
-  void _scrollToBottom() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_scrollCtrl.hasClients) {
-        _scrollCtrl.animateTo(
-          _scrollCtrl.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOut,
-        );
-      }
-    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: const Color(0xFFF7F9FB),
       appBar: BrandedAppBar(
-        title: 'AI Dermatology Assistant',
+        title: l10n.aiDermatologyAssistantTitle,
         subtitle: widget.disease,
       ),
       body: Column(
         children: [
           Expanded(
+            // reverse: true anchors the latest message to the bottom, right
+            // above the input bar, so when the keyboard opens it only crops
+            // the view from the top instead of pushing the last message
+            // and input off-screen.
             child: ListView.builder(
-              controller: _scrollCtrl,
+              reverse: true,
               padding: const EdgeInsets.all(16),
               itemCount: _messages.length + (_sending ? 1 : 0),
               itemBuilder: (_, i) {
-                if (_sending && i == _messages.length) {
+                if (_sending && i == 0) {
                   return _typingIndicator();
                 }
-                return _bubble(_messages[i]);
+                final msgIndex =
+                    _messages.length - 1 - (i - (_sending ? 1 : 0));
+                return _bubble(_messages[msgIndex]);
               },
             ),
           ),
-          _inputBar(),
+          _inputBar(l10n),
         ],
       ),
     );
@@ -188,7 +241,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
         ),
       );
 
-  Widget _inputBar() => Container(
+  Widget _inputBar(AppLocalizations l10n) => Container(
         color: Colors.white,
         padding: EdgeInsets.only(
           left: 16,
@@ -201,8 +254,8 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
             Expanded(
               child: TextField(
                 controller: _controller,
-                decoration: const InputDecoration(
-                  hintText: 'Ask about your condition...',
+                decoration: InputDecoration(
+                  hintText: l10n.askAboutConditionHint,
                   filled: true,
                   fillColor: Color(0xFFF0F4F8),
                   contentPadding:

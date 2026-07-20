@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../app_theme.dart';
+import '../l10n/generated/app_localizations.dart';
 import '../services/auth_service.dart';
 import '../widgets/app_header_bar.dart';
 import '../models/report.dart';
@@ -28,7 +29,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
     setState(() { _loading = true; _error = null; });
     final uid = _auth.userId;
     if (uid == null) {
-      setState(() { _error = 'Not logged in.'; _loading = false; });
+      setState(() {
+        _error = AppLocalizations.of(context).notLoggedInError;
+        _loading = false;
+      });
       return;
     }
     try {
@@ -49,10 +53,11 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: AppTheme.bg,
       appBar: BrandedAppBar(
-        title: 'My Reports',
+        title: l10n.myReportsTitle,
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh_rounded, color: AppTheme.primary),
@@ -64,22 +69,22 @@ class _ReportsScreenState extends State<ReportsScreen> {
           ? const Center(
               child: CircularProgressIndicator(color: AppTheme.primary))
           : _error != null
-              ? _errorState()
+              ? _errorState(l10n)
               : _reports.isEmpty
-                  ? _emptyState()
+                  ? _emptyState(l10n)
                   : RefreshIndicator(
                       onRefresh: _load,
                       color: AppTheme.primary,
                       child: ListView.builder(
                         padding: const EdgeInsets.all(16),
                         itemCount: _reports.length,
-                        itemBuilder: (_, i) => _reportCard(_reports[i]),
+                        itemBuilder: (_, i) => _reportCard(_reports[i], l10n),
                       ),
                     ),
     );
   }
 
-  Widget _reportCard(Report report) {
+  Widget _reportCard(Report report, AppLocalizations l10n) {
     final color = report.severityLevel == 'high'
         ? const Color(0xFFE63946)
         : report.severityLevel == 'medium'
@@ -118,8 +123,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 fontSize: 14,
                 color: Color(0xFF1A1A2E))),
         subtitle: Text(
-          '${report.confidence.toStringAsFixed(1)}% confidence · '
-          '${report.createdAt.day}/${report.createdAt.month}/${report.createdAt.year}',
+          l10n.confidenceWithDate(
+            report.confidence.toStringAsFixed(1),
+            '${report.createdAt.day}/${report.createdAt.month}/${report.createdAt.year}',
+          ),
           style: const TextStyle(fontSize: 12, color: Color(0xFF6B7280)),
         ),
         trailing: report.imageUrl.isNotEmpty
@@ -135,9 +142,26 @@ class _ReportsScreenState extends State<ReportsScreen> {
               )
             : const Icon(Icons.chevron_right, color: Color(0xFF6B7280)),
         children: [
-          _expandedRow('Symptoms', report.symptoms),
+          _expandedRow(l10n.symptomsLabel, report.symptoms),
           const SizedBox(height: 8),
-          _expandedRow('Precautions', report.precautions),
+          _expandedRow(l10n.precautionsLabel, report.precautions),
+          const SizedBox(height: 14),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: () => Navigator.pushNamed(context, '/chatbot',
+                  arguments: {'disease': report.diseaseName}),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: AppTheme.primary,
+                side: const BorderSide(color: AppTheme.primary, width: 2),
+                shape: const StadiumBorder(),
+                padding: const EdgeInsets.symmetric(vertical: 12),
+              ),
+              icon: const Icon(Icons.chat_bubble_outline_rounded, size: 18),
+              label: Text(l10n.askAiChatbot,
+                  style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+            ),
+          ),
         ],
       ),
     );
@@ -158,30 +182,30 @@ class _ReportsScreenState extends State<ReportsScreen> {
         ],
       );
 
-  Widget _emptyState() => Center(
+  Widget _emptyState(AppLocalizations l10n) => Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             const Icon(Icons.article_outlined, size: 64, color: Color(0xFF6B7280)),
             const SizedBox(height: 14),
-            const Text('No reports yet',
-                style: TextStyle(
+            Text(l10n.noReportsYet,
+                style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                     color: Color(0xFF1A1A2E))),
             const SizedBox(height: 6),
-            const Text('Your diagnoses will appear here.',
-                style: TextStyle(fontSize: 13, color: Color(0xFF6B7280))),
+            Text(l10n.diagnosesWillAppearHere,
+                style: const TextStyle(fontSize: 13, color: Color(0xFF6B7280))),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () => Navigator.pushNamed(context, '/upload'),
-              child: const Text('Scan Now'),
+              child: Text(l10n.scanNow),
             ),
           ],
         ),
       );
 
-  Widget _errorState() => Center(
+  Widget _errorState(AppLocalizations l10n) => Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -191,7 +215,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 textAlign: TextAlign.center,
                 style: const TextStyle(color: Color(0xFF6B7280))),
             const SizedBox(height: 20),
-            ElevatedButton(onPressed: _load, child: const Text('Retry')),
+            ElevatedButton(onPressed: _load, child: Text(l10n.retry)),
           ],
         ),
       );

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../app_theme.dart';
+import '../l10n/generated/app_localizations.dart';
+import '../providers/locale_provider.dart';
 import '../services/auth_service.dart';
 import '../services/api_service.dart';
-import '../services/language_service.dart';
 import '../widgets/app_header_bar.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -15,13 +16,6 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final _auth = AuthService();
-  String _selectedLanguage = 'en';
-
-  final Map<String, String> _languages = {
-    'en': 'English',
-    'ur': 'Urdu',
-    'hi': 'Hindi',
-  };
 
   String _initials() {
     final name = Supabase.instance.client.auth.currentUser
@@ -42,40 +36,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String _email() =>
       Supabase.instance.client.auth.currentUser?.email ?? '';
 
-  void _changeLanguage(String code) {
-    setState(() => _selectedLanguage = code);
-    LanguageService.language.value = code;
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Language set to ${_languages[code]}'),
-        backgroundColor: AppTheme.primary,
-        behavior: SnackBarBehavior.floating,
-        duration: const Duration(seconds: 2),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      ));
-    }
+  void _changeAppLocale(Locale newLocale) {
+    LocaleProvider.setLocale(newLocale);
   }
 
   Future<void> _logout() async {
+    final l10n = AppLocalizations.of(context);
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text('Sign Out',
+        title: Text(l10n.signOut,
             style:
-                TextStyle(fontWeight: FontWeight.w600, color: Color(0xFF1A1A2E))),
+                const TextStyle(fontWeight: FontWeight.w600, color: Color(0xFF1A1A2E))),
         content:
-            const Text('Are you sure you want to sign out?',
-                style: TextStyle(color: Color(0xFF6B7280))),
+            Text(l10n.signOutConfirmMessage,
+                style: const TextStyle(color: Color(0xFF6B7280))),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: const Text('Cancel',
-                  style: TextStyle(color: Color(0xFF6B7280)))),
+              child: Text(l10n.cancel,
+                  style: const TextStyle(color: Color(0xFF6B7280)))),
           TextButton(
               onPressed: () => Navigator.pop(context, true),
-              child: const Text('Sign Out',
-                  style: TextStyle(
+              child: Text(l10n.signOut,
+                  style: const TextStyle(
                       color: Color(0xFFE63946),
                       fontWeight: FontWeight.w600))),
         ],
@@ -92,9 +77,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: AppTheme.bg,
-      appBar: const BrandedAppBar(title: 'Profile'),
+      appBar: BrandedAppBar(title: l10n.profileTitle),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -144,7 +130,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   _settingsTile(
                     icon: Icons.person_outline,
-                    title: 'Full Name',
+                    title: l10n.fullNameLabel,
                     trailing: Text(_name(),
                         style: const TextStyle(
                             color: Color(0xFF6B7280), fontSize: 13)),
@@ -152,16 +138,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   _divider(),
                   _settingsTile(
                     icon: Icons.email_outlined,
-                    title: 'Email',
+                    title: l10n.emailLabel,
                     trailing: Text(_email(),
                         style: const TextStyle(
                             color: Color(0xFF6B7280), fontSize: 13)),
                   ),
                   _divider(),
                   _settingsTile(
-                    icon: Icons.translate_outlined,
-                    title: 'Language',
-                    trailing: _languageSelector(),
+                    icon: Icons.language_rounded,
+                    title: l10n.appLanguageLabel,
+                    trailing: _appLocaleSelector(),
                   ),
                 ],
               ),
@@ -178,8 +164,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 shape: const StadiumBorder(),
               ),
               icon: const Icon(Icons.logout_rounded),
-              label: const Text('Sign Out',
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
+              label: Text(l10n.signOut,
+                  style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
             ),
           ],
         ),
@@ -213,36 +199,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _divider() =>
       const Divider(height: 1, color: Color(0xFFF0F4F8), indent: 54);
 
-  Widget _languageSelector() => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-        decoration: BoxDecoration(
-          color: const Color(0xFFF0F4F8),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: _languages.entries.map((e) {
-            final active = e.key == _selectedLanguage;
-            return GestureDetector(
-              onTap: () => _changeLanguage(e.key),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                decoration: BoxDecoration(
-                  color:
-                      active ? AppTheme.primary : Colors.transparent,
-                  borderRadius: BorderRadius.circular(8),
+  Widget _appLocaleSelector() => ValueListenableBuilder<Locale>(
+        valueListenable: LocaleProvider.locale,
+        builder: (context, currentLocale, _) => Container(
+          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF0F4F8),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: LocaleProvider.supportedLocales.map((locale) {
+              final active = locale.languageCode == currentLocale.languageCode;
+              final label = locale.languageCode == 'ur' ? 'اردو' : 'English';
+              return GestureDetector(
+                onTap: () => _changeAppLocale(locale),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: active ? AppTheme.primary : Colors.transparent,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(label,
+                      style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color:
+                              active ? Colors.white : const Color(0xFF6B7280))),
                 ),
-                child: Text(e.value,
-                    style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        color:
-                            active ? Colors.white : const Color(0xFF6B7280))),
-              ),
-            );
-          }).toList(),
+              );
+            }).toList(),
+          ),
         ),
       );
 }

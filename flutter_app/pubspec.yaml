@@ -9,6 +9,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.20.2
+
+  # Local persistence (selected app language)
+  shared_preferences: ^2.3.2
 
   # Supabase
   supabase_flutter: ^2.5.6
@@ -51,6 +57,7 @@ flutter_launcher_icons:
 
 flutter:
   uses-material-design: true
+  generate: true
   assets:
     - assets/app_logo.png
     - assets/app_icon_foreground.png

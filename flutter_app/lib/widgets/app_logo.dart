@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../app_theme.dart';
+import '../l10n/generated/app_localizations.dart';
 
 /// DermaVision+ brand logo — image asset with optional label.
 class AppLogo extends StatelessWidget {
@@ -63,7 +64,7 @@ class AppLogo extends StatelessWidget {
               ),
               if (!compact)
                 Text(
-                  'AI Dermatology',
+                  AppLocalizations.of(context).aiDermatologyTagline,
                   style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.w500,

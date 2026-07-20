@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../app_theme.dart';
+import '../l10n/generated/app_localizations.dart';
 import '../services/auth_service.dart';
 import '../widgets/app_logo.dart';
 
@@ -49,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
     } on AuthException catch (e) {
       setState(() => _error = e.message);
     } catch (_) {
-      setState(() => _error = 'Network error. Please try again.');
+      setState(() => _error = AppLocalizations.of(context).networkError);
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -57,6 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: AppTheme.bg,
       body: SafeArea(
@@ -94,14 +96,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      const Text('Welcome Back',
-                          style: TextStyle(
+                      Text(l10n.welcomeBack,
+                          style: const TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.w700,
                               color: Color(0xFF1A1A2E))),
                       const SizedBox(height: 6),
-                      const Text('Sign in to continue',
-                    style: TextStyle(
+                      Text(l10n.signInToContinue,
+                    style: const TextStyle(
                         fontSize: 13,
                         color: Color(0xFF6B7280))),
                 const SizedBox(height: 36),
@@ -153,8 +155,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('Email',
-                            style: TextStyle(
+                        Text(l10n.emailLabel,
+                            style: const TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w500,
                                 color: Color(0xFF1A1A2E))),
@@ -162,15 +164,15 @@ class _LoginScreenState extends State<LoginScreen> {
                         TextFormField(
                           controller: _emailCtrl,
                           keyboardType: TextInputType.emailAddress,
-                          decoration: const InputDecoration(
-                              hintText: 'you@example.com',
-                              prefixIcon: Icon(Icons.email_outlined)),
+                          decoration: InputDecoration(
+                              hintText: l10n.emailHint,
+                              prefixIcon: const Icon(Icons.email_outlined)),
                           validator: (v) =>
-                              (v == null || !v.contains('@')) ? 'Enter a valid email' : null,
+                              (v == null || !v.contains('@')) ? l10n.invalidEmailError : null,
                         ),
                         const SizedBox(height: 20),
-                        const Text('Password',
-                            style: TextStyle(
+                        Text(l10n.passwordLabel,
+                            style: const TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w500,
                                 color: Color(0xFF1A1A2E))),
@@ -190,7 +192,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           validator: (v) =>
-                              (v == null || v.length < 6) ? 'Min 6 characters' : null,
+                              (v == null || v.length < 6) ? l10n.passwordTooShortError : null,
                         ),
                         if (_error != null) ...[
                           const SizedBox(height: 16),
@@ -222,7 +224,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     color: AppTheme.primary))
                             : ElevatedButton(
                                 onPressed: _login,
-                                child: const Text('Sign In'),
+                                child: Text(l10n.signIn),
                               ),
                       ],
                     ),
@@ -232,12 +234,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text("Don't have an account? ",
-                        style: TextStyle(color: Color(0xFF6B7280))),
+                    Text(l10n.dontHaveAccount,
+                        style: const TextStyle(color: Color(0xFF6B7280))),
                     GestureDetector(
                       onTap: () => Navigator.pushNamed(context, '/register'),
-                      child: const Text('Sign Up',
-                          style: TextStyle(
+                      child: Text(l10n.signUp,
+                          style: const TextStyle(
                               color: AppTheme.primary,
                               fontWeight: FontWeight.w600)),
                     ),

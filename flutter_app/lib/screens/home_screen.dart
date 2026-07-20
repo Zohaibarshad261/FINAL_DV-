@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../app_theme.dart';
+import '../l10n/generated/app_localizations.dart';
 import '../services/auth_service.dart';
 import '../models/report.dart';
 import '../widgets/disease_chip.dart';
@@ -18,13 +19,13 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Report> _recentReports = [];
   bool _loadingReports = true;
 
-  final List<String> _tips = [
-    'Apply broad-spectrum SPF 30+ every day.',
-    'Check your skin monthly for new or changing moles.',
-    'Stay hydrated — skin reflects your water intake.',
-    'Avoid tanning beds; UV exposure accelerates aging.',
-    'See a dermatologist annually for a full skin check.',
-  ];
+  List<String> _tips(AppLocalizations l10n) => [
+        l10n.tipSpf,
+        l10n.tipCheckSkin,
+        l10n.tipHydrate,
+        l10n.tipAvoidTanning,
+        l10n.tipSeeDermatologist,
+      ];
 
   @override
   void initState() {
@@ -57,16 +58,17 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  String _greeting() {
+  String _greeting(AppLocalizations l10n) {
     final hour = DateTime.now().hour;
-    if (hour < 12) return 'Good morning';
-    if (hour < 17) return 'Good afternoon';
-    return 'Good evening';
+    if (hour < 12) return l10n.greetingMorning;
+    if (hour < 17) return l10n.greetingAfternoon;
+    return l10n.greetingEvening;
   }
 
-  String _userName() {
+  String _userName(AppLocalizations l10n) {
     final meta = Supabase.instance.client.auth.currentUser?.userMetadata;
-    return meta?['full_name']?.toString().split(' ').first ?? 'there';
+    return meta?['full_name']?.toString().split(' ').first ??
+        l10n.greetingFallbackName;
   }
 
   void _onNavTap(int index) {
@@ -87,15 +89,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: AppTheme.bg,
-      body: SafeArea(child: _homeTab()),
-      bottomNavigationBar: _bottomNav(),
+      body: SafeArea(child: _homeTab(l10n)),
+      bottomNavigationBar: _bottomNav(l10n),
     );
   }
 
-  Widget _homeTab() {
-    final tip = _tips[DateTime.now().day % _tips.length];
+  Widget _homeTab(AppLocalizations l10n) {
+    final tips = _tips(l10n);
+    final tip = tips[DateTime.now().day % tips.length];
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -171,7 +175,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   color: Colors.white.withValues(alpha: 0.9)),
                               const SizedBox(width: 4),
                               Text(
-                                'AI Skin Care',
+                                l10n.aiSkinCareBadge,
                                 style: TextStyle(
                                   color: Colors.white.withValues(alpha: 0.9),
                                   fontSize: 11,
@@ -185,7 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 14),
                     Text(
-                      '${_greeting()}, ${_userName()} 👋',
+                      '${_greeting(l10n)}, ${_userName(l10n)} 👋',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 20,
@@ -230,21 +234,21 @@ class _HomeScreenState extends State<HomeScreen> {
               _statCard(
                 icon: Icons.biotech_rounded,
                 value: '${AppTheme.diseaseCount}',
-                label: 'Diseases',
+                label: l10n.statDiseases,
                 color: AppTheme.primaryLight,
               ),
               const SizedBox(width: 12),
               _statCard(
                 icon: Icons.speed_rounded,
                 value: 'AI',
-                label: 'Powered',
+                label: l10n.statPowered,
                 color: AppTheme.primary,
               ),
               const SizedBox(width: 12),
               _statCard(
                 icon: Icons.verified_rounded,
                 value: '24/7',
-                label: 'Available',
+                label: l10n.statAvailable,
                 color: AppTheme.primaryDark,
               ),
             ],
@@ -286,22 +290,22 @@ class _HomeScreenState extends State<HomeScreen> {
                         size: 32, color: Colors.white),
                   ),
                   const SizedBox(width: 16),
-                  const Expanded(
+                  Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Scan Your Skin',
-                          style: TextStyle(
+                          l10n.scanYourSkin,
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w700,
                             color: Colors.white,
                           ),
                         ),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         Text(
-                          'Upload a photo for instant AI analysis',
-                          style: TextStyle(
+                          l10n.uploadPhotoSubtitle,
+                          style: const TextStyle(
                             fontSize: 12,
                             color: Color(0xCCFFFFFF),
                           ),
@@ -325,9 +329,9 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 28),
 
           // Recent reports
-          const Text(
-            'Recent Diagnoses',
-            style: TextStyle(
+          Text(
+            l10n.recentDiagnoses,
+            style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
               color: AppTheme.textPrimary,
@@ -339,9 +343,9 @@ class _HomeScreenState extends State<HomeScreen> {
               child: CircularProgressIndicator(color: AppTheme.primary),
             )
           else if (_recentReports.isEmpty)
-            _emptyReports()
+            _emptyReports(l10n)
           else
-            ..._recentReports.map(_buildMiniReportCard),
+            ..._recentReports.map((r) => _buildMiniReportCard(r, l10n)),
         ],
       ),
     );
@@ -388,7 +392,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _emptyReports() => Container(
+  Widget _emptyReports(AppLocalizations l10n) => Container(
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -409,25 +413,25 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: AppTheme.primary, size: 28),
             ),
             const SizedBox(height: 12),
-            const Text(
-              'No diagnoses yet',
-              style: TextStyle(
+            Text(
+              l10n.noDiagnosesYet,
+              style: const TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 14,
                 color: AppTheme.textPrimary,
               ),
             ),
             const SizedBox(height: 4),
-            const Text(
-              'Tap "Scan Your Skin" to get started',
+            Text(
+              l10n.tapScanToStart,
               textAlign: TextAlign.center,
-              style: TextStyle(color: AppTheme.textMuted, fontSize: 12),
+              style: const TextStyle(color: AppTheme.textMuted, fontSize: 12),
             ),
           ],
         ),
       );
 
-  Widget _buildMiniReportCard(Report r) {
+  Widget _buildMiniReportCard(Report r, AppLocalizations l10n) {
     final color = r.severityLevel == 'high'
         ? const Color(0xFFE63946)
         : r.severityLevel == 'medium'
@@ -477,8 +481,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 Text(
-                  '${r.confidence.toStringAsFixed(1)}% confidence · '
-                  '${r.createdAt.day}/${r.createdAt.month}/${r.createdAt.year}',
+                  l10n.confidenceWithDate(
+                    r.confidence.toStringAsFixed(1),
+                    '${r.createdAt.day}/${r.createdAt.month}/${r.createdAt.year}',
+                  ),
                   style: const TextStyle(
                     fontSize: 12,
                     color: AppTheme.textMuted,
@@ -495,7 +501,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _bottomNav() => Container(
+  Widget _bottomNav(AppLocalizations l10n) => Container(
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: const BorderRadius.only(
@@ -521,26 +527,26 @@ class _HomeScreenState extends State<HomeScreen> {
           selectedLabelStyle:
               const TextStyle(fontWeight: FontWeight.w600, fontSize: 11),
           unselectedLabelStyle: const TextStyle(fontSize: 11),
-          items: const [
+          items: [
             BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined),
-              activeIcon: Icon(Icons.home_rounded),
-              label: 'Home',
+              icon: const Icon(Icons.home_outlined),
+              activeIcon: const Icon(Icons.home_rounded),
+              label: l10n.navHome,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.camera_alt_outlined),
-              activeIcon: Icon(Icons.camera_alt_rounded),
-              label: 'Upload',
+              icon: const Icon(Icons.camera_alt_outlined),
+              activeIcon: const Icon(Icons.camera_alt_rounded),
+              label: l10n.navUpload,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.article_outlined),
-              activeIcon: Icon(Icons.article_rounded),
-              label: 'Reports',
+              icon: const Icon(Icons.article_outlined),
+              activeIcon: const Icon(Icons.article_rounded),
+              label: l10n.navReports,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person_outline),
-              activeIcon: Icon(Icons.person_rounded),
-              label: 'Profile',
+              icon: const Icon(Icons.person_outline),
+              activeIcon: const Icon(Icons.person_rounded),
+              label: l10n.navProfile,
             ),
           ],
         ),

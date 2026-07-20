@@ -255,6 +255,7 @@ class ChatRequest(BaseModel):
     message: str
     disease_context: str = ""
     language: str = "en"
+    history: list[dict[str, str]] = []
 
 
 _SYSTEM_PROMPT = (
@@ -298,6 +299,12 @@ async def chat(body: ChatRequest) -> dict[str, str]:
         lang_name = _LANGUAGE_NAMES.get(body.language, body.language)
         system += f" Always respond in {lang_name} language only."
 
+    history = [
+        {"role": m["role"], "content": m["content"]}
+        for m in body.history
+        if m.get("role") in ("user", "assistant") and m.get("content", "").strip()
+    ][-20:]  # cap context to the last 20 turns
+
     try:
         use_groq = bool(os.environ.get("GROQ_API_KEY"))
         model = "llama-3.1-8b-instant" if use_groq else "gpt-4o-mini"
@@ -305,6 +312,7 @@ async def chat(body: ChatRequest) -> dict[str, str]:
             model=model,
             messages=[
                 {"role": "system", "content": system},
+                *history,
                 {"role": "user", "content": body.message},
             ],
             max_tokens=400,

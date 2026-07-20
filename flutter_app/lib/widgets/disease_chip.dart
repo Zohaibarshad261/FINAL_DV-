@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../app_theme.dart';
+import '../l10n/generated/app_localizations.dart';
 import '../screens/disease_detail_screen.dart';
 
 /// Tappable disease pill used on the home screen showcase.
@@ -92,6 +93,7 @@ class DiseaseShowcase extends StatelessWidget {
   }
 
   void _showAllDiseases(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -137,21 +139,21 @@ class DiseaseShowcase extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 12),
-                    const Expanded(
+                    Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Conditions We Detect',
-                            style: TextStyle(
+                            l10n.conditionsWeDetect,
+                            style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
                               color: AppTheme.textPrimary,
                             ),
                           ),
                           Text(
-                            'AI-powered skin analysis',
-                            style: TextStyle(
+                            l10n.aiPoweredAnalysisSubtitle,
+                            style: const TextStyle(
                               fontSize: 12,
                               color: AppTheme.textMuted,
                             ),
@@ -223,6 +225,7 @@ class DiseaseShowcase extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -255,7 +258,7 @@ class DiseaseShowcase extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '${AppTheme.diseaseCount} Skin Conditions',
+                        l10n.skinConditionsCount(AppTheme.diseaseCount),
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 17,
@@ -264,7 +267,7 @@ class DiseaseShowcase extends StatelessWidget {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        'Tap to explore all diseases we detect',
+                        l10n.tapToExploreDiseases,
                         style: TextStyle(
                           color: Colors.white.withValues(alpha: 0.85),
                           fontSize: 12,
@@ -289,10 +292,10 @@ class DiseaseShowcase extends StatelessWidget {
         const SizedBox(height: 18),
         Row(
           children: [
-            const Expanded(
+            Expanded(
               child: Text(
-                'Conditions We Detect',
-                style: TextStyle(
+                l10n.conditionsWeDetect,
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
                   color: AppTheme.textPrimary,
@@ -319,7 +322,7 @@ class DiseaseShowcase extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      '${AppTheme.diseaseCount} Diseases',
+                      l10n.diseasesCountChip(AppTheme.diseaseCount),
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 12,
@@ -336,9 +339,9 @@ class DiseaseShowcase extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 6),
-        const Text(
-          'Our AI can identify a wide range of skin conditions',
-          style: TextStyle(fontSize: 12, color: AppTheme.textMuted),
+        Text(
+          l10n.aiRangeDescription,
+          style: const TextStyle(fontSize: 12, color: AppTheme.textMuted),
         ),
         const SizedBox(height: 14),
         SizedBox(

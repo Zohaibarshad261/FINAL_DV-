@@ -80,6 +80,7 @@ class ApiService {
     required String message,
     required String diseaseContext,
     String language = 'en',
+    List<Map<String, String>> history = const [],
   }) async {
     final uri = Uri.parse('$_base/chat');
     final response = await http
@@ -90,6 +91,7 @@ class ApiService {
             'message': message,
             'disease_context': diseaseContext,
             'language': language,
+            'history': history,
           }),
         )
         .timeout(const Duration(seconds: 30));

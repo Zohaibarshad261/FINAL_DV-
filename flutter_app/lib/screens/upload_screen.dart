@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../app_theme.dart';
+import '../l10n/generated/app_localizations.dart';
 import '../services/inference_service.dart';
 import '../services/auth_service.dart';
 import '../widgets/app_header_bar.dart';
@@ -19,7 +20,7 @@ class _UploadScreenState extends State<UploadScreen>
   File? _selectedImage;
   bool _analyzing = false;
   String? _error;
-  String _statusText = 'Analyzing...';
+  String _statusText = '';
   final _auth = AuthService();
   final _picker = ImagePicker();
 
@@ -53,27 +54,28 @@ class _UploadScreenState extends State<UploadScreen>
   }
 
   Future<void> _analyze() async {
+    final l10n = AppLocalizations.of(context);
     if (_selectedImage == null) {
-      setState(() => _error = 'Please select an image first.');
+      setState(() => _error = l10n.selectImageFirstError);
       return;
     }
     final uid = _auth.userId;
     if (uid == null) {
-      setState(() => _error = 'You must be logged in.');
+      setState(() => _error = l10n.mustBeLoggedInError);
       return;
     }
 
     setState(() {
       _analyzing = true;
       _error = null;
-      _statusText = 'Running AI analysis...';
+      _statusText = l10n.statusRunningAiAnalysis;
     });
 
     try {
       // Step 1: Server-side inference (FastAPI + PyTorch)
       final result = await InferenceService.predict(_selectedImage!);
 
-      if (mounted) setState(() => _statusText = 'Uploading image...');
+      if (mounted) setState(() => _statusText = l10n.statusUploadingImage);
 
       // Step 2: Upload image to Supabase Storage
       final bytes = await _selectedImage!.readAsBytes();
@@ -90,7 +92,7 @@ class _UploadScreenState extends State<UploadScreen>
           .from('skin-images')
           .getPublicUrl(fileName);
 
-      if (mounted) setState(() => _statusText = 'Saving report...');
+      if (mounted) setState(() => _statusText = l10n.statusSavingReport);
 
       // Step 3: Save report directly to Supabase
       final confidence = (result['confidence'] as num).toDouble();
@@ -119,9 +121,10 @@ class _UploadScreenState extends State<UploadScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: AppTheme.bg,
-      appBar: const BrandedAppBar(title: 'Scan Skin'),
+      appBar: BrandedAppBar(title: l10n.scanSkinTitle),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -165,14 +168,14 @@ class _UploadScreenState extends State<UploadScreen>
                                 color: AppTheme.primary),
                           ),
                           const SizedBox(height: 16),
-                          const Text('Tap to upload image',
-                              style: TextStyle(
+                          Text(l10n.tapToUploadImage,
+                              style: const TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w600,
                                   color: Color(0xFF1A1A2E))),
                           const SizedBox(height: 4),
-                          const Text('JPG, PNG supported',
-                              style: TextStyle(
+                          Text(l10n.jpgPngSupported,
+                              style: const TextStyle(
                                   fontSize: 12, color: Color(0xFF6B7280))),
                         ],
                       )
@@ -192,7 +195,7 @@ class _UploadScreenState extends State<UploadScreen>
                 Expanded(
                   child: _sourceButton(
                     icon: Icons.camera_alt_rounded,
-                    label: 'Camera',
+                    label: l10n.cameraLabel,
                     onTap: () => _pickImage(ImageSource.camera),
                   ),
                 ),
@@ -200,7 +203,7 @@ class _UploadScreenState extends State<UploadScreen>
                 Expanded(
                   child: _sourceButton(
                     icon: Icons.photo_library_outlined,
-                    label: 'Gallery',
+                    label: l10n.galleryLabel,
                     onTap: () => _pickImage(ImageSource.gallery),
                   ),
                 ),
@@ -279,8 +282,8 @@ class _UploadScreenState extends State<UploadScreen>
                         minimumSize: const Size(double.infinity, 54),
                         shape: const StadiumBorder(),
                       ),
-                      child: const Text('Analyze Image',
-                          style: TextStyle(
+                      child: Text(l10n.analyzeImage,
+                          style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w600,
                               fontSize: 15)),
@@ -326,6 +329,7 @@ class _UploadScreenState extends State<UploadScreen>
       );
 
   void _showSourceSheet() {
+    final l10n = AppLocalizations.of(context);
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.white,
@@ -336,9 +340,9 @@ class _UploadScreenState extends State<UploadScreen>
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            _modalOption(Icons.camera_alt_rounded, 'Camera',
+            _modalOption(Icons.camera_alt_rounded, l10n.cameraLabel,
                 () => _pickImage(ImageSource.camera)),
-            _modalOption(Icons.photo_library_outlined, 'Gallery',
+            _modalOption(Icons.photo_library_outlined, l10n.galleryLabel,
                 () => _pickImage(ImageSource.gallery)),
           ],
         ),

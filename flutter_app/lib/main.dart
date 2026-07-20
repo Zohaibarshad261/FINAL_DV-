@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'app_theme.dart';
 import 'config.dart';
+import 'l10n/generated/app_localizations.dart';
+import 'providers/locale_provider.dart';
 import 'screens/splash_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/register_screen.dart';
@@ -22,6 +24,8 @@ Future<void> main() async {
     anonKey: AppConfig.supabaseAnonKey,
   );
 
+  await LocaleProvider.init();
+
   runApp(const DermaVisionApp());
 }
 
@@ -30,12 +34,18 @@ class DermaVisionApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'DermaVision+',
-      debugShowCheckedModeBanner: false,
-      theme: _buildTheme(),
-      initialRoute: '/',
-      onGenerateRoute: _generateRoute,
+    return ValueListenableBuilder<Locale>(
+      valueListenable: LocaleProvider.locale,
+      builder: (context, locale, _) => MaterialApp(
+        title: 'DermaVision+',
+        debugShowCheckedModeBanner: false,
+        theme: _buildTheme(),
+        locale: locale,
+        supportedLocales: LocaleProvider.supportedLocales,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        initialRoute: '/',
+        onGenerateRoute: _generateRoute,
+      ),
     );
   }
 

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import '../app_theme.dart';
+import '../l10n/generated/app_localizations.dart';
 import '../widgets/app_header_bar.dart';
 
 /// Overview page for a single condition — shown when a disease is tapped
@@ -44,10 +45,11 @@ class _DiseaseDetailScreenState extends State<DiseaseDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final color = AppTheme.chipColor(widget.index);
     final icon = AppTheme.iconFor(widget.name);
-    final overview = _info?['overview'] as String? ??
-        'Detailed information about this condition is not available yet.';
+    final overview =
+        _info?['overview'] as String? ?? l10n.noDetailInfoAvailable;
     final symptoms = _split(_info?['symptoms'] as String?);
     final precautions = _split(_info?['precautions'] as String?);
 
@@ -61,12 +63,12 @@ class _DiseaseDetailScreenState extends State<DiseaseDetailScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _headerBanner(color, icon),
+                  _headerBanner(color, icon, l10n),
                   const SizedBox(height: 20),
                   _visualReferenceRow(color, icon),
                   const SizedBox(height: 20),
                   _sectionCard(
-                    title: 'Overview',
+                    title: l10n.overviewLabel,
                     icon: Icons.info_outline_rounded,
                     color: color,
                     child: Text(
@@ -81,7 +83,7 @@ class _DiseaseDetailScreenState extends State<DiseaseDetailScreen> {
                   if (symptoms.isNotEmpty) ...[
                     const SizedBox(height: 16),
                     _chipCard(
-                      title: 'Symptoms',
+                      title: l10n.symptomsLabel,
                       icon: Icons.sick_outlined,
                       color: color,
                       chips: symptoms,
@@ -90,7 +92,7 @@ class _DiseaseDetailScreenState extends State<DiseaseDetailScreen> {
                   if (precautions.isNotEmpty) ...[
                     const SizedBox(height: 16),
                     _chipCard(
-                      title: 'Precautions',
+                      title: l10n.precautionsLabel,
                       icon: Icons.shield_outlined,
                       color: color,
                       chips: precautions,
@@ -107,8 +109,8 @@ class _DiseaseDetailScreenState extends State<DiseaseDetailScreen> {
                       shape: const StadiumBorder(),
                     ),
                     icon: const Icon(Icons.chat_bubble_outline),
-                    label: const Text('Ask AI Chatbot',
-                        style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
+                    label: Text(l10n.askAiChatbot,
+                        style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
                   ),
                 ],
               ),
@@ -116,7 +118,7 @@ class _DiseaseDetailScreenState extends State<DiseaseDetailScreen> {
     );
   }
 
-  Widget _headerBanner(Color color, IconData icon) {
+  Widget _headerBanner(Color color, IconData icon, AppLocalizations l10n) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -161,7 +163,7 @@ class _DiseaseDetailScreenState extends State<DiseaseDetailScreen> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Condition overview',
+                  l10n.conditionOverview,
                   style: TextStyle(
                     color: Colors.white.withValues(alpha: 0.85),
                     fontSize: 12,

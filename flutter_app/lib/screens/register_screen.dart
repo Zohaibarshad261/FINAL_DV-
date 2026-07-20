@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../app_theme.dart';
+import '../l10n/generated/app_localizations.dart';
 import '../services/auth_service.dart';
 import '../widgets/app_logo.dart';
 
@@ -41,18 +42,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
       );
       await _auth.signOut();
       if (!mounted) return;
+      final message = AppLocalizations.of(context).accountCreatedMessage;
       Navigator.pushReplacementNamed(
         context,
         '/login',
         arguments: {
           'email': _emailCtrl.text.trim(),
-          'message': 'Account created! Please sign in with your email and password.',
+          'message': message,
         },
       );
     } on AuthException catch (e) {
       setState(() => _error = e.message);
     } catch (_) {
-      setState(() => _error = 'Network error. Please try again.');
+      setState(() => _error = AppLocalizations.of(context).networkError);
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -60,6 +62,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: AppTheme.bg,
       body: SafeArea(
@@ -97,14 +100,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      const Text('Create Account',
-                    style: TextStyle(
+                      Text(l10n.createAccount,
+                    style: const TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.w700,
                         color: Color(0xFF1A1A2E))),
                 const SizedBox(height: 6),
-                const Text('Join DermaVision+ today',
-                    style: TextStyle(fontSize: 13, color: Color(0xFF6B7280))),
+                Text(l10n.joinToday,
+                    style: const TextStyle(fontSize: 13, color: Color(0xFF6B7280))),
                 const SizedBox(height: 36),
 
                 Container(
@@ -125,30 +128,30 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _label('Full Name'),
+                        _label(l10n.fullNameLabel),
                         const SizedBox(height: 8),
                         TextFormField(
                           controller: _nameCtrl,
-                          decoration: const InputDecoration(
-                              hintText: 'John Doe',
-                              prefixIcon: Icon(Icons.person_outline)),
+                          decoration: InputDecoration(
+                              hintText: l10n.fullNameHint,
+                              prefixIcon: const Icon(Icons.person_outline)),
                           validator: (v) =>
-                              (v == null || v.isEmpty) ? 'Name is required' : null,
+                              (v == null || v.isEmpty) ? l10n.nameRequiredError : null,
                         ),
                         const SizedBox(height: 20),
-                        _label('Email'),
+                        _label(l10n.emailLabel),
                         const SizedBox(height: 8),
                         TextFormField(
                           controller: _emailCtrl,
                           keyboardType: TextInputType.emailAddress,
-                          decoration: const InputDecoration(
-                              hintText: 'you@example.com',
-                              prefixIcon: Icon(Icons.email_outlined)),
+                          decoration: InputDecoration(
+                              hintText: l10n.emailHint,
+                              prefixIcon: const Icon(Icons.email_outlined)),
                           validator: (v) =>
-                              (v == null || !v.contains('@')) ? 'Enter a valid email' : null,
+                              (v == null || !v.contains('@')) ? l10n.invalidEmailError : null,
                         ),
                         const SizedBox(height: 20),
-                        _label('Password'),
+                        _label(l10n.passwordLabel),
                         const SizedBox(height: 8),
                         TextFormField(
                           controller: _passCtrl,
@@ -165,7 +168,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ),
                           ),
                           validator: (v) =>
-                              (v == null || v.length < 6) ? 'Min 6 characters' : null,
+                              (v == null || v.length < 6) ? l10n.passwordTooShortError : null,
                         ),
                         if (_error != null) ...[
                           const SizedBox(height: 16),
@@ -178,7 +181,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     color: AppTheme.primary))
                             : ElevatedButton(
                                 onPressed: _register,
-                                child: const Text('Create Account'),
+                                child: Text(l10n.createAccount),
                               ),
                       ],
                     ),
@@ -188,12 +191,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text('Already have an account? ',
-                        style: TextStyle(color: Color(0xFF6B7280))),
+                    Text(l10n.alreadyHaveAccount,
+                        style: const TextStyle(color: Color(0xFF6B7280))),
                     GestureDetector(
                       onTap: () => Navigator.pop(context),
-                      child: const Text('Sign In',
-                          style: TextStyle(
+                      child: Text(l10n.signIn,
+                          style: const TextStyle(
                               color: AppTheme.primary,
                               fontWeight: FontWeight.w600)),
                     ),

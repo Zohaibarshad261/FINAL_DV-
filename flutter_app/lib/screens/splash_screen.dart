@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../app_theme.dart';
+import '../l10n/generated/app_localizations.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -113,7 +114,7 @@ class _SplashScreenState extends State<SplashScreen>
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    'Your skin health, AI-powered',
+                    AppLocalizations.of(context).splashTagline,
                     style: TextStyle(
                       color: Colors.white.withValues(alpha: 0.8),
                       fontSize: 14,
@@ -129,7 +130,8 @@ class _SplashScreenState extends State<SplashScreen>
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      '${AppTheme.diseaseCount} skin conditions detected',
+                      AppLocalizations.of(context)
+                          .splashConditionsDetected(AppTheme.diseaseCount),
                       style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.9),
                         fontSize: 12,

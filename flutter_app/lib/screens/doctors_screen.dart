@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../services/api_service.dart';
 import '../models/doctor.dart';
 import '../app_theme.dart';
+import '../l10n/generated/app_localizations.dart';
 import '../widgets/app_header_bar.dart';
 
 class DoctorsScreen extends StatefulWidget {
@@ -39,7 +40,7 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
       }
       if (perm == LocationPermission.deniedForever) {
         setState(() {
-          _error = 'Location permission permanently denied. Enable it in app settings.';
+          _error = AppLocalizations.of(context).locationPermissionDeniedError;
           _loading = false;
         });
         return;
@@ -70,7 +71,9 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
     } catch (_) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Could not open maps app')),
+          SnackBar(
+              content:
+                  Text(AppLocalizations.of(context).couldNotOpenMapsError)),
         );
       }
     }
@@ -137,10 +140,11 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: const Color(0xFFF7F9FB),
       appBar: BrandedAppBar(
-        title: 'Nearby Doctors',
+        title: l10n.nearbyDoctorsTitle,
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh_rounded, color: AppTheme.primary),
@@ -149,27 +153,27 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
         ],
       ),
       body: _loading
-          ? const Center(
+          ? Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  CircularProgressIndicator(color: Color(0xFF0B6E6E)),
-                  SizedBox(height: 14),
-                  Text('Finding doctors near you...',
-                      style: TextStyle(color: Color(0xFF6B7280), fontSize: 14)),
+                  const CircularProgressIndicator(color: Color(0xFF0B6E6E)),
+                  const SizedBox(height: 14),
+                  Text(l10n.findingDoctorsNearYou,
+                      style: const TextStyle(color: Color(0xFF6B7280), fontSize: 14)),
                 ],
               ))
           : _error != null
-              ? _errorState()
+              ? _errorState(l10n)
               : Column(
                   children: [
                     // OpenStreetMap tile map
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.38,
                       child: _position == null
-                          ? const Center(
-                              child: Text('Location unavailable',
-                                  style: TextStyle(color: Color(0xFF6B7280))))
+                          ? Center(
+                              child: Text(l10n.locationUnavailable,
+                                  style: const TextStyle(color: Color(0xFF6B7280))))
                           : FlutterMap(
                               mapController: _mapController,
                               options: MapOptions(
@@ -202,15 +206,15 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
                               color: Color(0xFF0B6E6E), size: 18),
                           const SizedBox(width: 6),
                           Text(
-                            '${_doctors.length} doctor${_doctors.length != 1 ? 's' : ''} found nearby',
+                            l10n.doctorsFoundNearby(_doctors.length),
                             style: const TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w500,
                                 color: Color(0xFF1A1A2E)),
                           ),
                           const Spacer(),
-                          const Text('Pakistan Doctors Directory',
-                              style: TextStyle(
+                          Text(l10n.pakistanDoctorsDirectory,
+                              style: const TextStyle(
                                   fontSize: 10, color: Color(0xFF6B7280))),
                         ],
                       ),
@@ -219,11 +223,12 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
                     // Doctor cards
                     Expanded(
                       child: _doctors.isEmpty
-                          ? _emptyState()
+                          ? _emptyState(l10n)
                           : ListView.builder(
                               padding: const EdgeInsets.all(16),
                               itemCount: _doctors.length,
-                              itemBuilder: (_, i) => _doctorCard(_doctors[i]),
+                              itemBuilder: (_, i) =>
+                                  _doctorCard(_doctors[i], l10n),
                             ),
                     ),
                   ],
@@ -231,7 +236,7 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
     );
   }
 
-  Widget _doctorCard(Doctor doc) => Container(
+  Widget _doctorCard(Doctor doc, AppLocalizations l10n) => Container(
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -311,14 +316,15 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
                 if (doc.experienceYears > 0)
                   _statChip(
                     icon: Icons.work_history_outlined,
-                    text: '${doc.experienceYears.toStringAsFixed(0)} yrs exp',
+                    text: l10n.yearsExpLabel(
+                        doc.experienceYears.toStringAsFixed(0)),
                     color: AppTheme.primary,
                     bg: AppTheme.accentSoft,
                   ),
                 if (doc.feePkr > 0)
                   _statChip(
                     icon: Icons.payments_outlined,
-                    text: 'Rs ${doc.feePkr.toStringAsFixed(0)}',
+                    text: l10n.feeLabel(doc.feePkr.toStringAsFixed(0)),
                     color: const Color(0xFF0B6E6E),
                     bg: const Color(0xFFE8F8F0),
                   ),
@@ -339,8 +345,8 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
                             borderRadius: BorderRadius.circular(12)),
                       ),
                       icon: const Icon(Icons.person_outline_rounded, size: 16),
-                      label: const Text('View Profile',
-                          style: TextStyle(fontSize: 12.5)),
+                      label: Text(l10n.viewProfile,
+                          style: const TextStyle(fontSize: 12.5)),
                     ),
                   ),
                 const SizedBox(width: 10),
@@ -386,7 +392,7 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
         ),
       );
 
-  Widget _emptyState() => Center(
+  Widget _emptyState(AppLocalizations l10n) => Center(
         child: Padding(
           padding: const EdgeInsets.all(32),
           child: Column(
@@ -395,25 +401,24 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
               const Icon(Icons.search_off_rounded,
                   size: 60, color: Color(0xFF6B7280)),
               const SizedBox(height: 16),
-              const Text('No doctors found in this area',
-                  style: TextStyle(
+              Text(l10n.noDoctorsFoundTitle,
+                  style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
                       color: Color(0xFF1A1A2E))),
               const SizedBox(height: 6),
-              const Text(
-                  'Could not load the doctors directory.\nCheck your connection and try again.',
+              Text(l10n.noDoctorsFoundMessage,
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 13, color: Color(0xFF6B7280))),
+                  style: const TextStyle(fontSize: 13, color: Color(0xFF6B7280))),
               const SizedBox(height: 20),
               ElevatedButton(
-                  onPressed: _fetchDoctors, child: const Text('Search Again')),
+                  onPressed: _fetchDoctors, child: Text(l10n.searchAgain)),
             ],
           ),
         ),
       );
 
-  Widget _errorState() => Center(
+  Widget _errorState(AppLocalizations l10n) => Center(
         child: Padding(
           padding: const EdgeInsets.all(32),
           child: Column(
@@ -428,7 +433,7 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
                       const TextStyle(color: Color(0xFF6B7280), fontSize: 14)),
               const SizedBox(height: 20),
               ElevatedButton(
-                  onPressed: _fetchDoctors, child: const Text('Try Again')),
+                  onPressed: _fetchDoctors, child: Text(l10n.tryAgain)),
             ],
           ),
         ),

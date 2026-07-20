@@ -1,0 +1,156 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "DermaVision+",
+  "cancel": "Cancel",
+  "retry": "Retry",
+  "tryAgain": "Try Again",
+  "ok": "OK",
+
+  "splashTagline": "Your skin health, AI-powered",
+  "splashConditionsDetected": "{count} skin conditions detected",
+  "@splashConditionsDetected": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+
+  "welcomeBack": "Welcome Back",
+  "signInToContinue": "Sign in to continue",
+  "emailLabel": "Email",
+  "emailHint": "you@example.com",
+  "passwordLabel": "Password",
+  "invalidEmailError": "Enter a valid email",
+  "passwordTooShortError": "Min 6 characters",
+  "signIn": "Sign In",
+  "dontHaveAccount": "Don't have an account? ",
+  "signUp": "Sign Up",
+  "networkError": "Network error. Please try again.",
+
+  "createAccount": "Create Account",
+  "joinToday": "Join DermaVision+ today",
+  "fullNameLabel": "Full Name",
+  "fullNameHint": "John Doe",
+  "nameRequiredError": "Name is required",
+  "alreadyHaveAccount": "Already have an account? ",
+  "accountCreatedMessage": "Account created! Please sign in with your email and password.",
+
+  "greetingMorning": "Good morning",
+  "greetingAfternoon": "Good afternoon",
+  "greetingEvening": "Good evening",
+  "greetingFallbackName": "there",
+  "aiDermatologyTagline": "AI Dermatology",
+  "aiSkinCareBadge": "AI Skin Care",
+  "tipSpf": "Apply broad-spectrum SPF 30+ every day.",
+  "tipCheckSkin": "Check your skin monthly for new or changing moles.",
+  "tipHydrate": "Stay hydrated — skin reflects your water intake.",
+  "tipAvoidTanning": "Avoid tanning beds; UV exposure accelerates aging.",
+  "tipSeeDermatologist": "See a dermatologist annually for a full skin check.",
+  "statDiseases": "Diseases",
+  "statPowered": "Powered",
+  "statAvailable": "Available",
+  "scanYourSkin": "Scan Your Skin",
+  "uploadPhotoSubtitle": "Upload a photo for instant AI analysis",
+  "recentDiagnoses": "Recent Diagnoses",
+  "noDiagnosesYet": "No diagnoses yet",
+  "tapScanToStart": "Tap \"Scan Your Skin\" to get started",
+  "navHome": "Home",
+  "navUpload": "Upload",
+  "navReports": "Reports",
+  "navProfile": "Profile",
+  "confidenceWithDate": "{percent}% confidence · {date}",
+  "@confidenceWithDate": {
+    "placeholders": {
+      "percent": { "type": "String" },
+      "date": { "type": "String" }
+    }
+  },
+
+  "conditionsWeDetect": "Conditions We Detect",
+  "aiPoweredAnalysisSubtitle": "AI-powered skin analysis",
+  "skinConditionsCount": "{count} Skin Conditions",
+  "@skinConditionsCount": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "diseasesCountChip": "{count} Diseases",
+  "@diseasesCountChip": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "tapToExploreDiseases": "Tap to explore all diseases we detect",
+  "aiRangeDescription": "Our AI can identify a wide range of skin conditions",
+
+  "scanSkinTitle": "Scan Skin",
+  "tapToUploadImage": "Tap to upload image",
+  "jpgPngSupported": "JPG, PNG supported",
+  "cameraLabel": "Camera",
+  "galleryLabel": "Gallery",
+  "selectImageFirstError": "Please select an image first.",
+  "mustBeLoggedInError": "You must be logged in.",
+  "statusAnalyzing": "Analyzing...",
+  "statusRunningAiAnalysis": "Running AI analysis...",
+  "statusUploadingImage": "Uploading image...",
+  "statusSavingReport": "Saving report...",
+  "analyzeImage": "Analyze Image",
+
+  "diagnosisResultTitle": "Diagnosis Result",
+  "confidenceLabel": "confidence",
+  "highSeverity": "High Severity",
+  "mediumSeverity": "Medium Severity",
+  "lowSeverity": "Low Severity",
+  "symptomsLabel": "Symptoms",
+  "precautionsLabel": "Precautions",
+  "topPredictionsLabel": "Top Predictions",
+  "rawLogitsLabel": "Raw Logits (copy to compare with Python)",
+  "findNearbyDoctors": "Find Nearby Doctors",
+  "askAiChatbot": "Ask AI Chatbot",
+
+  "nearbyDoctorsTitle": "Nearby Doctors",
+  "locationPermissionDeniedError": "Location permission permanently denied. Enable it in app settings.",
+  "couldNotOpenMapsError": "Could not open maps app",
+  "findingDoctorsNearYou": "Finding doctors near you...",
+  "locationUnavailable": "Location unavailable",
+  "doctorsFoundNearby": "{count,plural, =0{No doctors found nearby} =1{1 doctor found nearby} other{{count} doctors found nearby}}",
+  "@doctorsFoundNearby": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "pakistanDoctorsDirectory": "Pakistan Doctors Directory",
+  "viewProfile": "View Profile",
+  "noDoctorsFoundTitle": "No doctors found in this area",
+  "noDoctorsFoundMessage": "Could not load the doctors directory.\nCheck your connection and try again.",
+  "searchAgain": "Search Again",
+  "yearsExpLabel": "{years} yrs exp",
+  "@yearsExpLabel": {
+    "placeholders": { "years": { "type": "String" } }
+  },
+  "feeLabel": "Rs {amount}",
+  "@feeLabel": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+
+  "aiDermatologyAssistantTitle": "AI Dermatology Assistant",
+  "chatGreeting": "Hello! I'm your DermaVision+ assistant. You have been diagnosed with **{disease}**. Feel free to ask me any questions about your condition, symptoms, or treatment options.",
+  "@chatGreeting": {
+    "placeholders": { "disease": { "type": "String" } }
+  },
+  "chatErrorMessage": "Sorry, I couldn't process your request. Please try again.",
+  "askAboutConditionHint": "Ask about your condition...",
+
+  "myReportsTitle": "My Reports",
+  "notLoggedInError": "Not logged in.",
+  "noReportsYet": "No reports yet",
+  "diagnosesWillAppearHere": "Your diagnoses will appear here.",
+  "scanNow": "Scan Now",
+
+  "overviewLabel": "Overview",
+  "conditionOverview": "Condition overview",
+  "noDetailInfoAvailable": "Detailed information about this condition is not available yet.",
+
+  "profileTitle": "Profile",
+  "languageLabel": "Language",
+  "appLanguageLabel": "App Language",
+  "signOut": "Sign Out",
+  "signOutConfirmMessage": "Are you sure you want to sign out?",
+  "languageSetMessage": "Language set to {language}",
+  "@languageSetMessage": {
+    "placeholders": { "language": { "type": "String" } }
+  },
+  "defaultUserName": "User"
+}
